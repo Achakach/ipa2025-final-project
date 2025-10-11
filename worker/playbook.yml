@@ -1,0 +1,30 @@
+---
+- name: Get router interface status
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Run "show ip interface brief"
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: result_raw
+
+    - name: Parse the output using ansible.utils.cli_parse
+      ansible.utils.cli_parse:
+        text: "{{ result_raw.stdout[0] }}"
+        parser:
+          # vvv นี่คือโครงสร้างที่ถูกต้อง vvv
+          name: ansible.netcommon.ntc_templates
+          command: show ip interface brief
+      register: parsed_data
+
+    - name: Set final output as a fact
+      set_fact:
+        structured_output: "{{ parsed_data.parsed }}"

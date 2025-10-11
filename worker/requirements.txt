@@ -1,4 +1,10 @@
 couchdb
-netmiko
-ntc_templates
+# netmiko
+# ntc_templates
 pika
+ansible
+ansible-runner
+paramiko
+textfsm
+ntc-templates
+# ansible-pylibssh
