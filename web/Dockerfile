@@ -1,4 +1,5 @@
-FROM python
+# FROM python
+FROM python:3.11-slim-bullseye
 WORKDIR /home/myapp
 RUN pip install flask
 RUN pip install couchdb

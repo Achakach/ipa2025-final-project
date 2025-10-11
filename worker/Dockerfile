@@ -1,4 +1,5 @@
-FROM python
+# FROM python
+FROM python:3.11-slim-bullseye
 WORKDIR /home/myapp
 COPY . /home/myapp
 RUN pip install -r requirements.txt
