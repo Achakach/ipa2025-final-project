@@ -2,9 +2,31 @@
     <link rel="stylesheet" href="/static/style.css" />
     <h1>Router: {{ router_ip }}</h1>
 
-    <form method="POST" action="/router/{{ router_ip }}/backup">
+    <form id="backupForm" method="POST" action="/router/{{ router_ip }}/backup">
         <button type="submit">Backup Configuration</button>
+        <span id="backupStatus" style="display:none; margin-left: 10px;">Backup in progress... Please wait.</span>
     </form>
+
+    <script>
+        document.getElementById('backupForm').addEventListener('submit', function(event) {
+            // หยุดการส่งฟอร์มแบบปกติ
+            event.preventDefault();
+
+            // แสดงสถานะ "in progress"
+            document.getElementById('backupStatus').style.display = 'inline';
+            // ปิดการใช้งานปุ่มเพื่อป้องกันการกดซ้ำ
+            this.querySelector('button').disabled = true;
+
+            // ส่งคำขอ backup ไปเบื้องหลัง
+            fetch(this.action, { method: 'POST' });
+
+            // หน่วงเวลา 10 วินาที แล้วค่อยรีเฟรชหน้าเว็บ
+            setTimeout(function() {
+                location.reload();
+            }, 10000); // 10000 milliseconds = 10 seconds
+        });
+    </script>
+
     <br>
         <table border="1">
             <thead>
