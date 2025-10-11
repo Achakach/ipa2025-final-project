@@ -20,6 +20,7 @@ def save_interface_status(router_ip, interfaces):
     }
     db.save(data)
 
+
 def save_backup_config(router_ip, config_text):
     """บันทึก config ที่ได้จากการ backup ลงใน DB"""
     couchdb_uri = os.getenv("COUCHDB_URI")

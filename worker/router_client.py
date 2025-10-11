@@ -36,5 +36,6 @@ def get_interfaces(ip, username, password):
     print(f"RC: {result.rc}")
     raise Exception(f"Failed to get interface data from {ip}.")
 
+
 if __name__ == "__main__":
     pass

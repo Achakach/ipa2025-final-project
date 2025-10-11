@@ -29,7 +29,9 @@ server = connect_to_couchdb()
 # ดึงชื่อ database จาก env
 router_db_name = os.environ.get("ROUTER_DB_NAME", "my_routers_collection")
 interface_db_name = os.environ.get("INTERFACE_DB_NAME", "interface_status")
-backup_db_name = os.environ.get("BACKUP_DB_NAME", "router_backups") # <--- เพิ่ม DB สำหรับ backup
+backup_db_name = os.environ.get(
+    "BACKUP_DB_NAME", "router_backups"
+)  # <--- เพิ่ม DB สำหรับ backup
 
 # สร้าง database ถ้ายังไม่มี
 try:
@@ -43,7 +45,7 @@ except couchdb.PreconditionFailed:
     interface_db = server[interface_db_name]
 
 try:
-    backup_db = server.create(backup_db_name) # <--- สร้าง DB สำหรับ backup
+    backup_db = server.create(backup_db_name)  # <--- สร้าง DB สำหรับ backup
 except couchdb.PreconditionFailed:
     backup_db = server[backup_db_name]
 
@@ -80,20 +82,28 @@ def delete_comment():
 def router_detail(ip):
     # 1. ดึงข้อมูล Interface (เหมือนเดิม)
     all_interface_docs = [interface_db.get(doc_id) for doc_id in interface_db]
-    filtered_interface_docs = [doc for doc in all_interface_docs if doc and doc.get("router_ip") == ip]
-    sorted_interface_docs = sorted(filtered_interface_docs, key=lambda x: x.get('timestamp', ''), reverse=True)
+    filtered_interface_docs = [
+        doc for doc in all_interface_docs if doc and doc.get("router_ip") == ip
+    ]
+    sorted_interface_docs = sorted(
+        filtered_interface_docs, key=lambda x: x.get("timestamp", ""), reverse=True
+    )
     limited_interface_docs = sorted_interface_docs[:3]
 
     # 2. vvv ดึงข้อมูล Backup vvv
     all_backup_docs = [backup_db.get(doc_id) for doc_id in backup_db]
-    filtered_backup_docs = [doc for doc in all_backup_docs if doc and doc.get("router_ip") == ip]
-    sorted_backup_docs = sorted(filtered_backup_docs, key=lambda x: x.get('timestamp', ''), reverse=True)
+    filtered_backup_docs = [
+        doc for doc in all_backup_docs if doc and doc.get("router_ip") == ip
+    ]
+    sorted_backup_docs = sorted(
+        filtered_backup_docs, key=lambda x: x.get("timestamp", ""), reverse=True
+    )
 
     return render_template(
         "router_detail.html",
         router_ip=ip,
         interface_data=limited_interface_docs,
-        backup_data=sorted_backup_docs  # <--- ส่งรายการ backup ไปที่หน้าเว็บ
+        backup_data=sorted_backup_docs,  # <--- ส่งรายการ backup ไปที่หน้าเว็บ
     )
 
 
@@ -116,8 +126,8 @@ def send_to_rabbitmq(body):
 @sample.route("/router/<ip>/backup", methods=["POST"])
 def backup_router(ip):
     doc_to_backup = None
-    for row in router_db.view('_all_docs', include_docs=True):
-        if row.doc and row.doc.get('ip') == ip:
+    for row in router_db.view("_all_docs", include_docs=True):
+        if row.doc and row.doc.get("ip") == ip:
             doc_to_backup = row.doc
             break
 
@@ -126,7 +136,7 @@ def backup_router(ip):
             "job_type": "backup",
             "ip": doc_to_backup.get("ip"),
             "user": doc_to_backup.get("user"),
-            "password": doc_to_backup.get("password")
+            "password": doc_to_backup.get("password"),
         }
         body_bytes = json.dumps(job).encode("utf-8")
         send_to_rabbitmq(body_bytes)
@@ -143,7 +153,7 @@ def download_backup(backup_id):
 
     config_text = backup_doc.get("config", "")
     router_ip = backup_doc.get("router_ip", "router")
-    timestamp = backup_doc.get("timestamp", "").split("T")[0] # เอาเฉพาะวันที่
+    timestamp = backup_doc.get("timestamp", "").split("T")[0]  # เอาเฉพาะวันที่
 
     # สร้างชื่อไฟล์
     filename = f"backup-{router_ip}-{timestamp}.txt"
@@ -152,8 +162,10 @@ def download_backup(backup_id):
     return Response(
         config_text,
         mimetype="text/plain",
-        headers={"Content-disposition": f"attachment; filename={filename}"}
+        headers={"Content-disposition": f"attachment; filename={filename}"},
     )
+
+
 # ^^^ จบ Route ^^^
 
 
