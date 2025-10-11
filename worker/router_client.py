@@ -69,29 +69,32 @@ def backup_config(ip, username, password):
 
     raise Exception(f"Failed to backup config from {ip}. Status: {result.status}")
 
+
 # vvv เพิ่มฟังก์ชันนี้ vvv
 def restore_config(ip, username, password, config_content):
     """รัน Ansible Playbook เพื่อ restore config"""
     private_data_dir = os.path.dirname(__file__)
 
-    inventory = {'all': {'hosts': {ip: None}}}
+    inventory = {"all": {"hosts": {ip: None}}}
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook='restore_playbook.yml',
+        playbook="restore_playbook.yml",
         inventory=inventory,
         extravars={
             "router_user": username,
             "router_pass": password,
-            "config_content": config_content # <--- ส่งเนื้อหา config เข้าไป
+            "config_content": config_content,  # <--- ส่งเนื้อหา config เข้าไป
         },
-        quiet=False # เปิด verbose เพื่อให้เห็นผลลัพธ์
+        quiet=False,  # เปิด verbose เพื่อให้เห็นผลลัพธ์
     )
 
-    if result.status == 'failed':
+    if result.status == "failed":
         raise Exception(f"Failed to restore config for {ip}. See logs for details.")
 
     return result.status
+
+
 # ^^^ จบฟังก์ชัน ^^^
 
 if __name__ == "__main__":

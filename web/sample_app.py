@@ -182,6 +182,7 @@ def view_backup(backup_id):
 
 # ^^^ จบส่วนที่เพิ่ม ^^^
 
+
 # vvv เพิ่ม Route นี้เข้าไป vvv
 @sample.route("/backup/<backup_id>/restore", methods=["POST"])
 def restore_backup(backup_id):
@@ -194,8 +195,8 @@ def restore_backup(backup_id):
 
     # ค้นหาข้อมูล credential ของเราเตอร์จาก DB
     router_info_doc = None
-    for row in router_db.view('_all_docs', include_docs=True):
-        if row.doc and row.doc.get('ip') == router_ip:
+    for row in router_db.view("_all_docs", include_docs=True):
+        if row.doc and row.doc.get("ip") == router_ip:
             router_info_doc = row.doc
             break
 
@@ -206,13 +207,15 @@ def restore_backup(backup_id):
             "ip": router_ip,
             "user": router_info_doc.get("user"),
             "password": router_info_doc.get("password"),
-            "config": config_text # <--- แนบเนื้อหา config ไปด้วย
+            "config": config_text,  # <--- แนบเนื้อหา config ไปด้วย
         }
         body_bytes = json.dumps(job).encode("utf-8")
         send_to_rabbitmq(body_bytes)
 
     # หลังจากส่งงานแล้ว ให้ redirect กลับไปหน้ารายละเอียด
     return redirect(url_for("router_detail", ip=router_ip))
+
+
 # ^^^ จบ Route ^^^
 
 
