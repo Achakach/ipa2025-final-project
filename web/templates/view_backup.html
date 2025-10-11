@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>View Backup - {{ backup.router_ip }}</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+<body>
+    <h1>Backup for Router: {{ backup.router_ip }}</h1>
+    <p><strong>Timestamp:</strong> {{ backup.timestamp }}</p>
+    
+    <a href="/backup/{{ backup._id }}/download">
+        <button>Download this config</button>
+    </a>
+    <hr>
+
+    <h2>Configuration Content:</h2>
+    <pre style="background-color: #f4f4f4; border: 1px solid #ddd; padding: 10px; white-space: pre-wrap;">{{ backup.config }}</pre>
+
+</body>
+</html>

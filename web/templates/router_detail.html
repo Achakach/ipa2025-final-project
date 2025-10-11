@@ -66,6 +66,9 @@
             <tr>
                 <td>{{ backup.timestamp }}</td>
                 <td>
+                    <a href="/backup/{{ backup._id }}/view" style="margin-right: 5px;">
+                        <button>View</button>
+                    </a>
                     <a href="/backup/{{ backup._id }}/download">
                         <button>Download</button>
                     </a>
