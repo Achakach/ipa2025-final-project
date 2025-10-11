@@ -13,7 +13,7 @@ def get_interfaces(ip, username, password):
         "host": ip,
         "username": username,
         "password": password,
-        "disabled_algorithms": dict(pubkeys=["rsa-sha2-512", "rsa-sha2-256"])
+        "disabled_algorithms": dict(pubkeys=["rsa-sha2-512", "rsa-sha2-256"]),
     }
     with ConnectHandler(**device) as conn:
         conn.enable()

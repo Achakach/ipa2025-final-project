@@ -1,10 +1,10 @@
-from bson import json_util
+import json # <--- เปลี่ยนจาก bson
 from router_client import get_interfaces
 from database import save_interface_status
 
-
 def callback(ch, method, props, body):
-    job = json_util.loads(body.decode())
+    # vvv เปลี่ยนมาใช้ json.loads vvv
+    job = json.loads(body.decode())
     router_ip = job["ip"]
     router_username = job["user"]
     router_password = job["password"]

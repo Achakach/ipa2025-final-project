@@ -1,13 +1,10 @@
 import time
-
 import os
-from bson import json_util
+import json # <--- เปลี่ยนจาก bson
 from producer import produce
 from database import get_router_info
 
-
 def scheduler():
-
     INTERVAL = 60.0
     next_run = time.monotonic()
     count = 0
@@ -22,7 +19,8 @@ def scheduler():
 
         try:
             for data in get_router_info():
-                body_bytes = json_util.dumps(data).encode("utf-8")
+                # vvv เปลี่ยนมาใช้ json.dumps vvv
+                body_bytes = json.dumps(data).encode("utf-8")
                 produce(host, body_bytes)
         except Exception as e:
             print(e)
@@ -30,7 +28,6 @@ def scheduler():
         count += 1
         next_run += INTERVAL
         time.sleep(max(0.0, next_run - time.monotonic()))
-
 
 if __name__ == "__main__":
     scheduler()

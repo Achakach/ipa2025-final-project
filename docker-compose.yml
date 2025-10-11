@@ -4,25 +4,31 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mongo
+      - couchdb
     networks:
       - app-net
     env_file:
       - .env
     environment:
-      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "ipa2025_db"
+      COUCHDB_URI: "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@couchdb:5984/"
+      ROUTER_DB_NAME: "my_routers_collection"
+      INTERFACE_DB_NAME: "interface_status"
 
-  mongo:
-    image: mongo:6
+  couchdb: # <--- เปลี่ยน service นี้ทั้งหมด
+    image: couchdb:3
     ports:
-      - "27017:27017"
+      - "5984:5984"
     volumes:
-      - mongo-data:/data/db
+      - couchdb-data:/opt/couchdb/data
     networks:
       - app-net
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -44,7 +50,7 @@ services:
     build: ./scheduler
     # แก้ไข depends_on ตรงนี้
     depends_on:
-      mongo:
+      couchdb:
         condition: service_started
       rabbitmq:
         condition: service_healthy # <--- รอให้ rabbitmq healthy ก่อน
@@ -53,15 +59,15 @@ services:
     env_file:
       - .env
     environment:
-      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "ipa2025_db"
+      COUCHDB_URI: "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@couchdb:5984/"
+      ROUTER_DB_NAME: "my_routers_collection"
       RABBITMQ_HOST: "rabbitmq"
 
   worker:
     build: ./worker
     # แก้ไข depends_on ตรงนี้
     depends_on:
-      mongo:
+      couchdb:
         condition: service_started
       rabbitmq:
         condition: service_healthy # <--- รอให้ rabbitmq healthy ก่อน
@@ -72,12 +78,12 @@ services:
     env_file:
       - .env
     environment:
-      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "ipa2025_db"
+      COUCHDB_URI: "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@couchdb:5984/"
+      INTERFACE_DB_NAME: "interface_status"
       RABBITMQ_HOST: "rabbitmq"
 
 volumes:
-  mongo-data:
+  couchdb-data:
 
 networks:
   app-net:

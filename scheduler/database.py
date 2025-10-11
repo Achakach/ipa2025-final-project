@@ -1,17 +1,18 @@
 import os
-from pymongo import MongoClient
-
+import couchdb
 
 def get_router_info():
-    mongo_uri = os.environ.get("MONGO_URI")
-    db_name = os.environ.get("DB_NAME")
+    couchdb_uri = os.environ.get("COUCHDB_URI")
+    db_name = os.environ.get("ROUTER_DB_NAME")
 
-    client = MongoClient(mongo_uri)
-    db = client[db_name]
-    routers = db["my_routers_collection"]
-    router_data = routers.find()
+    server = couchdb.Server(couchdb_uri)
+    try:
+        db = server[db_name]
+    except couchdb.ResourceNotFound:
+        return []
+
+    router_data = [db.get(doc_id) for doc_id in db]
     return router_data
-
 
 if __name__ == "__main__":
     get_router_info()

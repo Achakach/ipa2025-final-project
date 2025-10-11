@@ -1,21 +1,20 @@
-from pymongo import MongoClient
 from datetime import datetime, UTC
 import os
-
+import couchdb
 
 def save_interface_status(router_ip, interfaces):
+    couchdb_uri = os.getenv("COUCHDB_URI")
+    db_name = os.getenv("INTERFACE_DB_NAME")
 
-    MONGO_URI = os.getenv("MONGO_URI")
-    DB_NAME = os.getenv("DB_NAME")
-
-    client = MongoClient(MONGO_URI)
-    db = client[DB_NAME]
-    collection = db["interface_status"]
+    server = couchdb.Server(couchdb_uri)
+    try:
+        db = server[db_name]
+    except couchdb.ResourceNotFound:
+        db = server.create(db_name)
 
     data = {
         "router_ip": router_ip,
-        "timestamp": datetime.now(UTC),
+        "timestamp": datetime.now(UTC).isoformat(),
         "interfaces": interfaces,
     }
-    collection.insert_one(data)
-    client.close()
+    db.save(data)

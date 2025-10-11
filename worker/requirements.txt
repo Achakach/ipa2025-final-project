@@ -1,4 +1,4 @@
-pymongo
+couchdb
 netmiko
 ntc_templates
 pika
