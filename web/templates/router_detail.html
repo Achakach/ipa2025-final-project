@@ -1,6 +1,11 @@
 <html>
     <link rel="stylesheet" href="/static/style.css" />
     <h1>Router: {{ router_ip }}</h1>
+
+    <form method="POST" action="/router/{{ router_ip }}/backup">
+        <button type="submit">Backup Configuration</button>
+    </form>
+    <br>
         <table border="1">
             <thead>
                 <tr>
@@ -25,5 +30,26 @@
                 {% endfor %}
             </tbody>
         </table>
-
+    <br>
+    <h2>Backup History</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Backup Timestamp</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for backup in backup_data %}
+            <tr>
+                <td>{{ backup.timestamp }}</td>
+                <td>
+                    <a href="/backup/{{ backup._id }}/download">
+                        <button>Download</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </html>

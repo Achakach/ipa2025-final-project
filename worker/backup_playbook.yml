@@ -1,0 +1,22 @@
+---
+- name: Backup router configuration
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Get running-config
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: result_config
+
+    - name: Set final output as a fact
+      set_fact:
+        # ดึงเนื้อหา config จาก result_config.stdout[0]
+        backup_config: "{{ result_config.stdout[0] }}"

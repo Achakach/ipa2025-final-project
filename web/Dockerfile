@@ -2,6 +2,7 @@ FROM python
 WORKDIR /home/myapp
 RUN pip install flask
 RUN pip install couchdb
+RUN pip install pika
 # RUN pip install pymongo
 COPY ./static /home/myapp/static/
 COPY ./templates /home/myapp/templates/
