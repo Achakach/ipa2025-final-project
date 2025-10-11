@@ -9,6 +9,10 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    
+    # เพิ่ม permissions เพื่อให้ Action สามารถ push commit กลับไปได้
+    permissions:
+      contents: write
 
     steps:
     - name: Check out code
@@ -23,20 +27,23 @@ jobs:
       run: |
         pip install flake8 black
 
+    # ขั้นตอนการจัดรูปแบบโค้ดอัตโนมัติ
     - name: Format code with black
       run: black .
 
+    # ขั้นตอนการ commit การเปลี่ยนแปลงกลับเข้าไป
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "style: auto-format code with black"
+        commit_user_name: github-actions[bot]
+        commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+        commit_author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
 
     - name: Run flake8 (Lint)
       run: flake8 .
 
-    - name: Check code format with black
-      run: black --check .
-
+    # --- ขั้นตอนเดิม ---
     - name: Check Docker Versions
       run: |
         docker --version
