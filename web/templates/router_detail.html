@@ -69,9 +69,12 @@
                     <a href="/backup/{{ backup._id }}/view" style="margin-right: 5px;">
                         <button>View</button>
                     </a>
-                    <a href="/backup/{{ backup._id }}/download">
+                    <a href="/backup/{{ backup._id }}/download" style="margin-right: 5px;">
                         <button>Download</button>
                     </a>
+                    <form method="POST" action="/backup/{{ backup._id }}/restore" style="display:inline;" onsubmit="return confirm('Are you sure you want to restore this configuration? This can have serious consequences.');">
+                        <button type="submit" style="background-color: #dc3545; color: white;">Restore</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

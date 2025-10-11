@@ -6,10 +6,15 @@
 <body>
     <h1>Backup for Router: {{ backup.router_ip }}</h1>
     <p><strong>Timestamp:</strong> {{ backup.timestamp }}</p>
-    
-    <a href="/backup/{{ backup._id }}/download">
+
+    <a href="/backup/{{ backup._id }}/download" style="margin-right: 5px;">
         <button>Download this config</button>
     </a>
+
+    <form method="POST" action="/backup/{{ backup._id }}/restore" style="display:inline;" onsubmit="return confirm('Are you sure you want to restore this configuration? This can have serious consequences.');">
+        <button type="submit" style="background-color: #dc3545; color: white;">Restore this config</button>
+    </form>
+
     <hr>
 
     <h2>Configuration Content:</h2>
