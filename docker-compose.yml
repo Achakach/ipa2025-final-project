@@ -33,12 +33,21 @@ services:
       - app-net
     env_file:
       - .env
+    # เพิ่ม healthcheck เข้าไปตรงนี้
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   scheduler:
     build: ./scheduler
+    # แก้ไข depends_on ตรงนี้
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy # <--- รอให้ rabbitmq healthy ก่อน
     networks:
       - app-net
     env_file:
@@ -46,13 +55,18 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
       DB_NAME: "ipa2025_db"
+      RABBITMQ_HOST: "rabbitmq"
 
   worker:
     build: ./worker
+    # แก้ไข depends_on ตรงนี้
     depends_on:
-      - mongo
-      - rabbitmq
-      - scheduler
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy # <--- รอให้ rabbitmq healthy ก่อน
+      scheduler:
+        condition: service_started
     networks:
       - app-net
     env_file:
@@ -60,6 +74,7 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
       DB_NAME: "ipa2025_db"
+      RABBITMQ_HOST: "rabbitmq"
 
 volumes:
   mongo-data:

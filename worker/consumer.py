@@ -17,7 +17,8 @@ def consume(host):
             )
             break
         except Exception as e:
-            print(f"Failed: {e}")
+            # เพิ่มการแสดงผล error ให้ละเอียดขึ้น
+            print(f"Failed with exception: {type(e).__name__}, {e}")
             time.sleep(5)
     else:
         print("Could not connect after 10 attempts")
