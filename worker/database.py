@@ -2,6 +2,7 @@ from datetime import datetime, UTC
 import os
 import couchdb
 
+
 def save_interface_status(router_ip, interfaces):
     couchdb_uri = os.getenv("COUCHDB_URI")
     db_name = os.getenv("INTERFACE_DB_NAME")

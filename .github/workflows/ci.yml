@@ -23,6 +23,14 @@ jobs:
       run: |
         pip install flake8 black
 
+    - name: Format code with black
+      run: black .
+
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "style: auto-format code with black"
+
     - name: Run flake8 (Lint)
       run: flake8 .
 

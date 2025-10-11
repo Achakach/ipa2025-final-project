@@ -5,10 +5,11 @@ import time
 
 sample = Flask(__name__)
 
+
 # --- ฟังก์ชันสำหรับรอ CouchDB ---
 def connect_to_couchdb():
     couchdb_uri = os.environ.get("COUCHDB_URI")
-    for _ in range(10): # พยายามเชื่อมต่อ 10 ครั้ง
+    for _ in range(10):  # พยายามเชื่อมต่อ 10 ครั้ง
         try:
             server = couchdb.Server(couchdb_uri)
             # ตรวจสอบการเชื่อมต่อโดยการขอข้อมูล server
@@ -19,6 +20,7 @@ def connect_to_couchdb():
             print(f"Failed to connect to CouchDB: {e}. Retrying in 5 seconds...")
             time.sleep(5)
     raise Exception("Could not connect to CouchDB after several attempts.")
+
 
 server = connect_to_couchdb()
 # --------------------------------
@@ -38,10 +40,12 @@ try:
 except couchdb.PreconditionFailed:
     interface_db = server[interface_db_name]
 
+
 @sample.route("/")
 def main():
     items = [router_db.get(doc_id) for doc_id in router_db]
     return render_template("index.html", items=items)
+
 
 @sample.route("/add", methods=["POST"])
 def add_comment():
@@ -51,6 +55,7 @@ def add_comment():
     if ip and user and password:
         router_db.save({"ip": ip, "user": user, "password": password})
     return redirect(url_for("main"))
+
 
 @sample.route("/delete", methods=["POST"])
 def delete_comment():
@@ -63,15 +68,21 @@ def delete_comment():
         print(f"Error deleting document: {e}")
     return redirect(url_for("main"))
 
+
 @sample.route("/router/<ip>", methods=["GET"])
 def router_detail(ip):
     all_docs = [interface_db.get(doc_id) for doc_id in interface_db]
-    
+
     filtered_docs = [doc for doc in all_docs if doc and doc.get("router_ip") == ip]
-    sorted_docs = sorted(filtered_docs, key=lambda x: x.get('timestamp', ''), reverse=True)
+    sorted_docs = sorted(
+        filtered_docs, key=lambda x: x.get("timestamp", ""), reverse=True
+    )
     limited_docs = sorted_docs[:3]
-    
-    return render_template("router_detail.html", router_ip=ip, interface_data=limited_docs)
+
+    return render_template(
+        "router_detail.html", router_ip=ip, interface_data=limited_docs
+    )
+
 
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)
