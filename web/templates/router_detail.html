@@ -43,24 +43,24 @@
                     <th>protocol</th>
                     <th>Actions</th> </tr>
             </thead>
-            <tbody>
-                {% for it in interface_data %}
-                {% for i in it.interfaces %}
-                <tr>
-                    <td>{{ it.timestamp }}</td>
-                    <td>{{ i.interface }}</td>
-                    <td>{{ i.ip_address }}</td>
-                    <td>{{ i.status }}</td>
-                    <td>{{ i.proto }}</td>
-                    <td>
-                        <a href="{{ url_for('config_interface', ip=router_ip, interface_name=i.interface.replace('/', '-')) }}">
-                            <button>Configure</button>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-                {% endfor %}
-            </tbody>
+<tbody>
+                {% if interface_data %}
+                    {% for i in interface_data.interfaces %}
+                    <tr>
+                        <td>{{ interface_data.timestamp }}</td>
+                        <td>{{ i.interface }}</td>
+                        <td>{{ i.ip_address }}</td>
+                        <td>{{ i.status }}</td>
+                        <td>{{ i.proto }}</td>
+                        <td>
+                            <a href="{{ url_for('config_interface', ip=router_ip, interface_name=i.interface.replace('/', '-')) }}">
+                                <button>Configure</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
         </table>
     <br>
     <h2>Backup History</h2>

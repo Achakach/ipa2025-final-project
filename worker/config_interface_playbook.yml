@@ -30,7 +30,16 @@
         state: merged
       when: config_type == 'manual' # <--- เงื่อนไขจะถูกใช้กับ Task นี้ทั้ง Task
 
-    # --- Task ที่ 3: เปิด Interface (no shutdown) ---
+    #unassign ip address
+    - name: Remove IP Address from Interface
+      cisco.ios.ios_config:
+        lines:
+          - no ip address
+        parents: "interface {{ interface_name }}"
+      when: config_type == 'unassigned'
+
+
+    # --- Task ที่ 4: เปิด Interface (no shutdown) ---
     - name: Enable Interface (no shutdown)
       cisco.ios.ios_interfaces:
         config:

@@ -88,7 +88,10 @@ def router_detail(ip):
     sorted_interface_docs = sorted(
         filtered_interface_docs, key=lambda x: x.get("timestamp", ""), reverse=True
     )
-    limited_interface_docs = sorted_interface_docs[:3]
+    latest_interface_data = None
+    if sorted_interface_docs:
+        latest_interface_data = sorted_interface_docs[0]
+    # limited_interface_docs = sorted_interface_docs[:3]
 
     # 2. vvv ดึงข้อมูล Backup vvv
     all_backup_docs = [backup_db.get(doc_id) for doc_id in backup_db]
@@ -102,8 +105,8 @@ def router_detail(ip):
     return render_template(
         "router_detail.html",
         router_ip=ip,
-        interface_data=limited_interface_docs,
-        backup_data=sorted_backup_docs,  # <--- ส่งรายการ backup ไปที่หน้าเว็บ
+        interface_data=latest_interface_data,
+        backup_data=sorted_backup_docs
     )
 
 

@@ -22,7 +22,10 @@
             <input type="radio" id="manual" name="config_type" value="manual" onchange="toggleManualConfig()">
             <label for="manual">Manual</label>
         </div>
-
+        <div>
+            <input type="radio" id="unassigned" name="config_type" value="unassigned" onchange="toggleManualConfig()">
+            <label for="unassigned">Unassigned (Remove IP)</label>
+        </div>
         <div id="manual_config" style="display:none; margin-top: 15px;">
             <label for="ip_address">IP Address:</label><br>
             <input type="text" id="ip_address" name="ip_address" placeholder="e.g., 192.168.1.1"><br><br>
