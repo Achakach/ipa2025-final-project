@@ -1,5 +1,10 @@
 <html>
     <link rel="stylesheet" href="/static/style.css" />
+    <body>
+        <div style="margin-bottom: 15px;">
+            <a href="{{ url_for('main') }}"><button>Home</button></a>
+        </div>
+        <hr>
     <h1>Router: {{ router_ip }}</h1>
 
     <form id="backupForm" method="POST" action="/router/{{ router_ip }}/backup">
@@ -80,4 +85,19 @@
             {% endfor %}
         </tbody>
     </table>
+        <script>
+        // ใช้ URLSearchParams เพื่ออ่านค่าจาก URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // ตรวจสอบว่ามี status=restore_sent ส่งมาหรือไม่
+        if (status === 'restore_sent') {
+            // ถ้ามี ให้แสดง pop-up
+            alert('Restore job has been sent successfully! The configuration will be applied shortly.');
+            
+            // ล้าง URL ให้กลับเป็นปกติ (เพื่อไม่ให้ pop-up ขึ้นมาอีกตอน refresh)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+    </body>
 </html>

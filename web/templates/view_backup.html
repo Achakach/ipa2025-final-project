@@ -4,6 +4,10 @@
         <link rel="stylesheet" href="/static/style.css" />
     </head>
 <body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+    </div>
+    <hr>
     <h1>Backup for Router: {{ backup.router_ip }}</h1>
     <p><strong>Timestamp:</strong> {{ backup.timestamp }}</p>
 

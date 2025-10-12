@@ -4,6 +4,10 @@
     <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+    </div>
+    <hr>
     <h1>Router Viewer</h1>
   <form method="POST" action="/add">
     <input name="ip" placeholder="Router IP" required />
