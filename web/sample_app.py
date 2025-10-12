@@ -106,7 +106,7 @@ def router_detail(ip):
         "router_detail.html",
         router_ip=ip,
         interface_data=latest_interface_data,
-        backup_data=sorted_backup_docs
+        backup_data=sorted_backup_docs,
     )
 
 
