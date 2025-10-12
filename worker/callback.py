@@ -1,5 +1,10 @@
 import json
-from router_client import get_interfaces, backup_config, restore_config, configure_interface
+from router_client import (
+    get_interfaces,
+    backup_config,
+    restore_config,
+    configure_interface,
+)
 from database import save_interface_status, save_backup_config
 
 
@@ -38,10 +43,17 @@ def callback(ch, method, props, body):
             subnet_prefix = job.get("subnet_prefix")
 
             configure_interface(
-                router_ip, router_username, router_password, 
-                interface_name, config_type, ip_address, subnet_prefix
+                router_ip,
+                router_username,
+                router_password,
+                interface_name,
+                config_type,
+                ip_address,
+                subnet_prefix,
             )
-            print(f"Successfully sent configure job for {interface_name} on {router_ip}")
+            print(
+                f"Successfully sent configure job for {interface_name} on {router_ip}"
+            )
 
     except Exception as e:
         print(f" Error: {e}")

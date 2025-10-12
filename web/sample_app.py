@@ -218,32 +218,33 @@ def restore_backup(backup_id):
 
 # ^^^ จบ Route ^^^
 
+
 @sample.route("/router/<ip>/interface/<interface_name>/config", methods=["GET", "POST"])
 def config_interface(ip, interface_name):
     # แปลงชื่อ interface กลับ (ถ้าจำเป็น) - ในที่นี้เราใช้ชื่อตรงๆ
-    interface_name_full = interface_name.replace('-', '/')
+    interface_name_full = interface_name.replace("-", "/")
 
     if request.method == "POST":
         # รับข้อมูลจากฟอร์ม
         config_type = request.form.get("config_type")
-        
+
         job = {
             "job_type": "configure_interface",
             "ip": ip,
             "interface_name": interface_name_full,
-            "config_type": config_type
+            "config_type": config_type,
         }
-        
+
         # ค้นหา Credential
         router_info_doc = None
-        for row in router_db.view('_all_docs', include_docs=True):
-            if row.doc and row.doc.get('ip') == ip:
+        for row in router_db.view("_all_docs", include_docs=True):
+            if row.doc and row.doc.get("ip") == ip:
                 router_info_doc = row.doc
                 break
 
         if not router_info_doc:
             return "Router credentials not found", 404
-            
+
         job["user"] = router_info_doc.get("user")
         job["password"] = router_info_doc.get("password")
 
@@ -253,16 +254,15 @@ def config_interface(ip, interface_name):
 
         body_bytes = json.dumps(job).encode("utf-8")
         send_to_rabbitmq(body_bytes)
-        
+
         # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
-        return redirect(url_for("router_detail", ip=ip, status='config_sent'))
+        return redirect(url_for("router_detail", ip=ip, status="config_sent"))
 
     # ถ้าเป็น GET request, แสดงฟอร์ม
     return render_template(
-        "config_interface.html", 
-        router_ip=ip,
-        interface_name=interface_name_full
+        "config_interface.html", router_ip=ip, interface_name=interface_name_full
     )
+
 
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)

@@ -97,11 +97,20 @@ def restore_config(ip, username, password, config_content):
 
 # ^^^ จบฟังก์ชัน ^^^
 
-def configure_interface(ip, username, password, interface_name, config_type, ip_address=None, subnet_prefix=None):
+
+def configure_interface(
+    ip,
+    username,
+    password,
+    interface_name,
+    config_type,
+    ip_address=None,
+    subnet_prefix=None,
+):
     """รัน Ansible Playbook เพื่อ config interface"""
     private_data_dir = os.path.dirname(__file__)
 
-    inventory = {'all': {'hosts': {ip: None}}}
+    inventory = {"all": {"hosts": {ip: None}}}
 
     extravars = {
         "router_user": username,
@@ -110,22 +119,25 @@ def configure_interface(ip, username, password, interface_name, config_type, ip_
         "config_type": config_type,
     }
 
-    if config_type == 'manual':
+    if config_type == "manual":
         extravars["ip_address"] = ip_address
         extravars["subnet_prefix"] = subnet_prefix
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook='config_interface_playbook.yml',
+        playbook="config_interface_playbook.yml",
         inventory=inventory,
         extravars=extravars,
-        quiet=False
+        quiet=False,
     )
 
-    if result.status == 'failed':
-        raise Exception(f"Failed to configure interface {interface_name} for {ip}. See logs for details.")
+    if result.status == "failed":
+        raise Exception(
+            f"Failed to configure interface {interface_name} for {ip}. See logs for details."
+        )
 
     return result.status
+
 
 if __name__ == "__main__":
     pass
