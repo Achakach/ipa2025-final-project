@@ -1,0 +1,56 @@
+<html>
+<head>
+    <title>Configure Interface</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+        <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
+    </div>
+    <hr>
+
+    <h1>Configure Interface: {{ interface_name }}</h1>
+    <h2>Router: {{ router_ip }}</h2>
+
+    <form method="POST">
+        <div>
+            <input type="radio" id="dhcp" name="config_type" value="dhcp" checked onchange="toggleManualConfig()">
+            <label for="dhcp">DHCP</label>
+        </div>
+        <div>
+            <input type="radio" id="manual" name="config_type" value="manual" onchange="toggleManualConfig()">
+            <label for="manual">Manual</label>
+        </div>
+
+        <div id="manual_config" style="display:none; margin-top: 15px;">
+            <label for="ip_address">IP Address:</label><br>
+            <input type="text" id="ip_address" name="ip_address" placeholder="e.g., 192.168.1.1"><br><br>
+
+            <label for="subnet_prefix">Subnet Mask:</label><br>
+            <select id="subnet_prefix" name="subnet_prefix">
+                {% for i in range(24, 33) %}
+                    <option value="{{ i }}">/{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <br>
+        <button type="submit">Apply Configuration</button>
+    </form>
+
+    <script>
+        function toggleManualConfig() {
+            var manualConfigDiv = document.getElementById('manual_config');
+            if (document.getElementById('manual').checked) {
+                manualConfigDiv.style.display = 'block';
+            } else {
+                manualConfigDiv.style.display = 'none';
+            }
+        }
+        // เรียกใช้ครั้งแรกเพื่อให้แน่ใจว่าค่าเริ่มต้นถูกต้อง
+        toggleManualConfig();
+    </script>
+
+</body>
+</html>

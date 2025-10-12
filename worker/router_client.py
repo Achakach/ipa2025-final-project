@@ -97,5 +97,35 @@ def restore_config(ip, username, password, config_content):
 
 # ^^^ จบฟังก์ชัน ^^^
 
+def configure_interface(ip, username, password, interface_name, config_type, ip_address=None, subnet_prefix=None):
+    """รัน Ansible Playbook เพื่อ config interface"""
+    private_data_dir = os.path.dirname(__file__)
+
+    inventory = {'all': {'hosts': {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "interface_name": interface_name,
+        "config_type": config_type,
+    }
+
+    if config_type == 'manual':
+        extravars["ip_address"] = ip_address
+        extravars["subnet_prefix"] = subnet_prefix
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook='config_interface_playbook.yml',
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False
+    )
+
+    if result.status == 'failed':
+        raise Exception(f"Failed to configure interface {interface_name} for {ip}. See logs for details.")
+
+    return result.status
+
 if __name__ == "__main__":
     pass

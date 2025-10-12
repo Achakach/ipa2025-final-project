@@ -33,7 +33,7 @@
     </script>
 
     <br>
-        <table border="1">
+<table border="1">
             <thead>
                 <tr>
                     <th>timestamp</th>
@@ -41,7 +41,7 @@
                     <th>ipaddress</th>
                     <th>status</th>
                     <th>protocol</th>
-                </tr>
+                    <th>Actions</th> </tr>
             </thead>
             <tbody>
                 {% for it in interface_data %}
@@ -52,6 +52,11 @@
                     <td>{{ i.ip_address }}</td>
                     <td>{{ i.status }}</td>
                     <td>{{ i.proto }}</td>
+                    <td>
+                        <a href="{{ url_for('config_interface', ip=router_ip, interface_name=i.interface.replace('/', '-')) }}">
+                            <button>Configure</button>
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
                 {% endfor %}

@@ -1,0 +1,39 @@
+---
+- name: Configure Router Interface
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    # --- Task ที่ 1: สำหรับ DHCP เท่านั้น ---
+    - name: Configure Interface with DHCP
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ interface_name }}"
+            ipv4:
+              - address: dhcp
+        state: merged
+      when: config_type == 'dhcp' # <--- เงื่อนไขจะถูกใช้กับ Task นี้ทั้ง Task
+
+    # --- Task ที่ 2: สำหรับ Manual IP เท่านั้น ---
+    - name: Configure Interface with Manual IP
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ interface_name }}"
+            ipv4:
+              - address: "{{ ip_address }}/{{ subnet_prefix }}"
+        state: merged
+      when: config_type == 'manual' # <--- เงื่อนไขจะถูกใช้กับ Task นี้ทั้ง Task
+
+    # --- Task ที่ 3: เปิด Interface (no shutdown) ---
+    - name: Enable Interface (no shutdown)
+      cisco.ios.ios_interfaces:
+        config:
+          - name: "{{ interface_name }}"
+            enabled: true
+        state: merged
