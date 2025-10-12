@@ -266,36 +266,33 @@ def config_interface(ip, interface_name):
         "config_interface.html", router_ip=ip, interface_name=interface_name_full
     )
 
+
 @sample.route("/router/<ip>/dns", methods=["GET", "POST"])
 def config_dns(ip):
     if request.method == "POST":
         dns1 = request.form.get("dns_server_1")
         dns2 = request.form.get("dns_server_2")
-        
-        job = {
-            "job_type": "configure_dns",
-            "ip": ip,
-            "dns_servers": [dns1, dns2]
-        }
-        
+
+        job = {"job_type": "configure_dns", "ip": ip, "dns_servers": [dns1, dns2]}
+
         # ค้นหา Credential
         router_info_doc = None
-        for row in router_db.view('_all_docs', include_docs=True):
-            if row.doc and row.doc.get('ip') == ip:
+        for row in router_db.view("_all_docs", include_docs=True):
+            if row.doc and row.doc.get("ip") == ip:
                 router_info_doc = row.doc
                 break
 
         if not router_info_doc:
             return "Router credentials not found", 404
-            
+
         job["user"] = router_info_doc.get("user")
         job["password"] = router_info_doc.get("password")
 
         body_bytes = json.dumps(job).encode("utf-8")
         send_to_rabbitmq(body_bytes)
-        
+
         # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
-        return redirect(url_for("router_detail", ip=ip, status='dns_config_sent'))
+        return redirect(url_for("router_detail", ip=ip, status="dns_config_sent"))
 
     # ถ้าเป็น GET request, แสดงฟอร์ม
     return render_template("config_dns.html", router_ip=ip)

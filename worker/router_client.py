@@ -138,10 +138,11 @@ def configure_interface(
 
     return result.status
 
+
 def configure_dns(ip, username, password, dns_servers):
     """รัน Ansible Playbook เพื่อ config DNS servers"""
     private_data_dir = os.path.dirname(__file__)
-    inventory = {'all': {'hosts': {ip: None}}}
+    inventory = {"all": {"hosts": {ip: None}}}
 
     # กรองเอาเฉพาะ IP ที่ไม่ว่างเปล่าออกไป
     valid_dns_servers = [server for server in dns_servers if server]
@@ -152,20 +153,21 @@ def configure_dns(ip, username, password, dns_servers):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook='playbooks/config_dns_playbook.yml',
+        playbook="playbooks/config_dns_playbook.yml",
         inventory=inventory,
         extravars={
             "router_user": username,
             "router_pass": password,
-            "dns_servers": valid_dns_servers
+            "dns_servers": valid_dns_servers,
         },
-        quiet=False
+        quiet=False,
     )
 
-    if result.status == 'failed':
+    if result.status == "failed":
         raise Exception(f"Failed to configure DNS for {ip}. See logs for details.")
 
     return result.status
+
 
 if __name__ == "__main__":
     pass

@@ -4,7 +4,7 @@ from router_client import (
     backup_config,
     restore_config,
     configure_interface,
-    configure_dns
+    configure_dns,
 )
 from database import save_interface_status, save_backup_config
 
