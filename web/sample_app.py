@@ -213,7 +213,7 @@ def restore_backup(backup_id):
         send_to_rabbitmq(body_bytes)
 
     # หลังจากส่งงานแล้ว ให้ redirect กลับไปหน้ารายละเอียด
-    return redirect(url_for("router_detail", ip=router_ip, status='restore_sent'))
+    return redirect(url_for("router_detail", ip=router_ip, status="restore_sent"))
 
 
 # ^^^ จบ Route ^^^
