@@ -10,7 +10,7 @@ def get_interfaces(ip, username, password):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="playbook.yml",
+        playbook="playbooks/get_interfaces_status.yml",
         inventory=inventory,
         extravars={"router_user": username, "router_pass": password},
         # quiet=True  <--- แก้ไขบรรทัดนี้
@@ -45,7 +45,7 @@ def backup_config(ip, username, password):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="backup_playbook.yml",
+        playbook="playbooks/backup_playbook.yml",
         inventory=inventory,
         extravars={"router_user": username, "router_pass": password},
         quiet=True,
@@ -79,7 +79,7 @@ def restore_config(ip, username, password, config_content):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="restore_playbook.yml",
+        playbook="playbooks/restore_playbook.yml",
         inventory=inventory,
         extravars={
             "router_user": username,
@@ -125,7 +125,7 @@ def configure_interface(
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="config_interface_playbook.yml",
+        playbook="playbooks/config_interface_playbook.yml",
         inventory=inventory,
         extravars=extravars,
         quiet=False,
