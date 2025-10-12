@@ -6,6 +6,9 @@
         </div>
         <hr>
     <h1>Router: {{ router_ip }}</h1>
+    <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
+        <button>Configure DNS</button>
+    </a>
     <br>
 <table border="1">
             <thead>
@@ -104,6 +107,10 @@
         else if (status === 'config_sent') {
             alert('Interface configuration job has been sent successfully! The changes will be applied shortly.');
             // ล้าง URL ให้กลับเป็นปกติ
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        else if (status === 'dns_config_sent') {
+            alert('DNS configuration job has been sent successfully! The changes will be applied shortly.');
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>

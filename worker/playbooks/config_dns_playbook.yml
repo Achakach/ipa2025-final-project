@@ -1,0 +1,18 @@
+---
+- name: Configure DNS Servers
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Set name servers
+      cisco.ios.ios_config:
+        lines:
+          # วนลูปเพื่อสร้างคำสั่งสำหรับ DNS Server ทุกตัวที่ส่งมา
+          - "ip name-server {{ item }}"
+      with_items: "{{ dns_servers }}"

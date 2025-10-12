@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Configure DNS</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+        <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
+    </div>
+    <hr>
+
+    <h1>Configure DNS Servers</h1>
+    <h2>Router: {{ router_ip }}</h2>
+    <p>Enter the IP addresses of the DNS servers you want to configure. Leave blank to ignore.</p>
+
+    <form method="POST">
+        <label for="dns1">Primary DNS Server:</label><br>
+        <input type="text" id="dns1" name="dns_server_1" placeholder="e.g., 8.8.8.8"><br><br>
+
+        <label for="dns2">Secondary DNS Server:</label><br>
+        <input type="text" id="dns2" name="dns_server_2" placeholder="e.g., 8.8.4.4"><br><br>
+
+        <button type="submit">Apply DNS Configuration</button>
+    </form>
+
+</body>
+</html>

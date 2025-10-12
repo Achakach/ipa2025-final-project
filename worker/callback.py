@@ -4,6 +4,7 @@ from router_client import (
     backup_config,
     restore_config,
     configure_interface,
+    configure_dns
 )
 from database import save_interface_status, save_backup_config
 
@@ -54,6 +55,11 @@ def callback(ch, method, props, body):
             print(
                 f"Successfully sent configure job for {interface_name} on {router_ip}"
             )
+
+        elif job_type == "configure_dns":
+            dns_servers = job.get("dns_servers", [])
+            configure_dns(router_ip, router_username, router_password, dns_servers)
+            print(f"Successfully sent DNS config job for {router_ip}")
 
     except Exception as e:
         print(f" Error: {e}")
