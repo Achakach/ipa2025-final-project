@@ -15,4 +15,4 @@
         lines:
           # วนลูปเพื่อสร้างคำสั่งสำหรับ DNS Server ทุกตัวที่ส่งมา
           - "ip name-server {{ item }}"
-      with_items: "{{ dns_servers }}"
+      loop: "{{ dns_servers }}"

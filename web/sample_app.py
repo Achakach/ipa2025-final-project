@@ -102,11 +102,17 @@ def router_detail(ip):
         filtered_backup_docs, key=lambda x: x.get("timestamp", ""), reverse=True
     )
 
+    # ดึงข้อมูล DNS จากเอกสารล่าสุด
+    current_dns_servers = []
+    if latest_interface_data and 'dns_servers' in latest_interface_data:
+        current_dns_servers = latest_interface_data['dns_servers']
+
     return render_template(
         "router_detail.html",
         router_ip=ip,
         interface_data=latest_interface_data,
         backup_data=sorted_backup_docs,
+        current_dns=current_dns_servers
     )
 
 

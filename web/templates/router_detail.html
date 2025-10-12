@@ -6,10 +6,7 @@
         </div>
         <hr>
     <h1>Router: {{ router_ip }}</h1>
-    <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
-        <button>Configure DNS</button>
-    </a>
-    <br>
+    <h2>Interface Status</h2>
 <table border="1">
             <thead>
                 <tr>
@@ -40,6 +37,21 @@
                 </tbody>
         </table>
     <br>
+    <hr>
+    <h2>Current DNS Servers</h2>
+    <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
+        <button>Configure DNS</button>
+    </a>
+    {% if current_dns %}
+        <ul>
+        {% for server in current_dns %}
+            <li>{{ server }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No DNS servers are currently configured on this router.</p>
+    {% endif %}
+    <hr>
     <h2>Backup History</h2>
         <form id="backupForm" method="POST" action="/router/{{ router_ip }}/backup">
         <button type="submit">Backup Configuration</button>

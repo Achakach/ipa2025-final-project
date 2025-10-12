@@ -3,7 +3,7 @@ import os
 import couchdb
 
 
-def save_interface_status(router_ip, interfaces):
+def save_interface_status(router_ip, status_data):
     couchdb_uri = os.getenv("COUCHDB_URI")
     db_name = os.getenv("INTERFACE_DB_NAME")
 
@@ -16,7 +16,8 @@ def save_interface_status(router_ip, interfaces):
     data = {
         "router_ip": router_ip,
         "timestamp": datetime.now(UTC).isoformat(),
-        "interfaces": interfaces,
+        "interfaces": status_data.get("interfaces", []),
+        "dns_servers": status_data.get("dns_servers", [])
     }
     db.save(data)
 

@@ -10,7 +10,7 @@ def get_interfaces(ip, username, password):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="playbooks/get_interfaces_status.yml",
+        playbook="playbooks/playbook.yml",
         inventory=inventory,
         extravars={"router_user": username, "router_pass": password},
         # quiet=True  <--- แก้ไขบรรทัดนี้
@@ -153,7 +153,7 @@ def configure_dns(ip, username, password, dns_servers):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="playbooks/config_dns_playbook.yml",
+        playbook="playbooks/playbook.yml",
         inventory=inventory,
         extravars={
             "router_user": username,

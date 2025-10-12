@@ -1,0 +1,50 @@
+---
+- name: Get router status
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Run "show ip interface brief"
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: result_interfaces_raw
+
+    - name: Parse the interface output
+      ansible.utils.cli_parse:
+        text: "{{ result_interfaces_raw.stdout[0] }}"
+        parser:
+          name: ansible.netcommon.ntc_templates
+          command: show ip interface brief
+      register: parsed_interfaces
+
+    # vvv Task ใหม่สำหรับดึง DNS vvv
+    - name: Run "show running-config | include ip name-server"
+      cisco.ios.ios_command:
+        commands:
+          - "show running-config | include ip name-server"
+      register: result_dns_raw
+
+    - name: Initialize dns_servers_list
+      set_fact:
+        dns_servers_list: []
+
+    - name: Extract DNS servers from each line
+      set_fact:
+        # นำ IP ที่แยกได้จากแต่ละบรรทัดมารวมกับ list เดิม
+        dns_servers_list: "{{ dns_servers_list + item.split(' ')[2:] }}"
+      # วนลูปอ่านทุกบรรทัดที่ได้มาจากคำสั่งก่อนหน้า
+      loop: "{{ result_dns_raw.stdout_lines | flatten }}"
+
+    # vvv Task สุดท้าย: รวมข้อมูลทั้งหมด vvv
+    - name: Set final combined output as a fact
+      set_fact:
+        structured_output:
+          interfaces: "{{ parsed_interfaces.parsed }}"
+          dns_servers: "{{ dns_servers_list }}"
