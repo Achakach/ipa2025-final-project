@@ -153,7 +153,7 @@ def configure_dns(ip, username, password, dns_servers):
 
     result = ansible_runner.run(
         private_data_dir=private_data_dir,
-        playbook="playbooks/playbook.yml",
+        playbook="playbooks/config_dns_playbook.yml",
         inventory=inventory,
         extravars={
             "router_user": username,
