@@ -17,7 +17,7 @@ def save_interface_status(router_ip, status_data):
         "router_ip": router_ip,
         "timestamp": datetime.now(UTC).isoformat(),
         "interfaces": status_data.get("interfaces", []),
-        "dns_servers": status_data.get("dns_servers", [])
+        "dns_servers": status_data.get("dns_servers", []),
     }
     db.save(data)
 
