@@ -304,9 +304,6 @@ def config_dns(ip):
     return render_template("config_dns.html", router_ip=ip)
 
 
-
-
-
 @sample.route("/router/<ip>/dhcp", methods=["GET", "POST"])
 def config_dhcp(ip):
     if request.method == "POST":
@@ -320,7 +317,10 @@ def config_dhcp(ip):
             "default_gateway": request.form.get("default_gateway"),
             "exclude_start_ip": request.form.get("exclude_start_ip"),
             "exclude_end_ip": request.form.get("exclude_end_ip"),
-            "dns_servers": [request.form.get("dns_server_1"), request.form.get("dns_server_2")]
+            "dns_servers": [
+                request.form.get("dns_server_1"),
+                request.form.get("dns_server_2"),
+            ],
         }
 
         # 2. ค้นหา Credential ของ Router
@@ -346,6 +346,7 @@ def config_dhcp(ip):
 
     # ถ้าเป็น GET request, แสดงฟอร์ม
     return render_template("config_dhcp.html", router_ip=ip)
+
 
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)

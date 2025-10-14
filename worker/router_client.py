@@ -170,7 +170,6 @@ def configure_dns(ip, username, password, dns_servers):
     return result.status
 
 
-
 def configure_dhcp(
     ip,
     username,
@@ -181,7 +180,7 @@ def configure_dhcp(
     default_gateway,
     exclude_start_ip,
     exclude_end_ip,
-    dns_servers
+    dns_servers,
 ):
     """รัน Ansible Playbook เพื่อ config DHCP server"""
     private_data_dir = os.path.dirname(__file__)
@@ -189,7 +188,9 @@ def configure_dhcp(
 
     # --- ส่วนที่เปลี่ยนแปลง ---
     # สร้าง object network จาก IP และ prefix ที่ได้รับมา
-    network_obj = ipaddress.IPv4Network(f"{network_address}/{subnet_prefix}", strict=False)
+    network_obj = ipaddress.IPv4Network(
+        f"{network_address}/{subnet_prefix}", strict=False
+    )
     # ดึงค่า subnet mask ออกมาเป็น string (เช่น '255.255.255.0')
     subnet_mask = str(network_obj.netmask)
     # -----------------------
@@ -205,7 +206,7 @@ def configure_dhcp(
         "default_gateway": default_gateway,
         "exclude_start_ip": exclude_start_ip,
         "exclude_end_ip": exclude_end_ip,
-        "dhcp_dns_servers": valid_dns_servers
+        "dhcp_dns_servers": valid_dns_servers,
     }
 
     result = ansible_runner.run(
@@ -220,8 +221,6 @@ def configure_dhcp(
         raise Exception(f"Failed to configure DHCP for {ip}. See logs for details.")
 
     return result.status
-
-
 
 
 if __name__ == "__main__":
