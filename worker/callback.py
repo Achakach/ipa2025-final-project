@@ -6,7 +6,7 @@ from router_client import (
     configure_interface,
     configure_dns,
     configure_dhcp,
-    delete_dhcp_pool
+    delete_dhcp_pool,
 )
 from database import save_interface_status, save_backup_config
 
@@ -81,7 +81,9 @@ def callback(ch, method, props, body):
         elif job_type == "delete_dhcp_pool":
             pool_name = job.get("pool_name")
             delete_dhcp_pool(router_ip, router_username, router_password, pool_name)
-            print(f"Successfully sent delete job for DHCP pool {pool_name} on {router_ip}")
+            print(
+                f"Successfully sent delete job for DHCP pool {pool_name} on {router_ip}"
+            )
 
     except Exception as e:
         print(f" Error: {e}")

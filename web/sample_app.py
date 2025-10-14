@@ -94,7 +94,11 @@ def router_detail(ip):
         latest_interface_data = sorted_interface_docs[0]
     # limited_interface_docs = sorted_interface_docs[:3]
 
-    dhcp_raw_text = latest_interface_data.get("dhcp_config_raw", "") if latest_interface_data else ""
+    dhcp_raw_text = (
+        latest_interface_data.get("dhcp_config_raw", "")
+        if latest_interface_data
+        else ""
+    )
     dhcp_pools, excluded_addresses = parse_dhcp_pools(dhcp_raw_text)
 
     # 2. vvv ดึงข้อมูล Backup vvv
@@ -369,7 +373,9 @@ def parse_dhcp_pools(raw_config):
         if line.startswith("ip dhcp excluded-address"):
             parts = line.split()
             if len(parts) >= 4:
-                excluded_addresses.append(f"{parts[3]} - {parts[4] if len(parts) > 4 else ''}")
+                excluded_addresses.append(
+                    f"{parts[3]} - {parts[4] if len(parts) > 4 else ''}"
+                )
 
     # หา pool และค่า config ภายใน
     current_pool = None
@@ -422,29 +428,27 @@ def delete_dhcp(ip):
     return redirect(url_for("router_detail", ip=ip, status="dhcp_delete_sent"))
 
 
-
 @sample.route("/router/<ip>/dhcp/edit/<pool_name>", methods=["GET", "POST"])
 def edit_dhcp(ip, pool_name):
     # --- จัดการเมื่อผู้ใช้กด "Apply Changes" ---
     if request.method == "POST":
         # 1. สร้าง Job สำหรับ "ลบ" Pool เก่า
-        delete_job = {
-            "job_type": "delete_dhcp_pool", "ip": ip, "pool_name": pool_name
-        }
+        delete_job = {"job_type": "delete_dhcp_pool", "ip": ip, "pool_name": pool_name}
 
         # 2. สร้าง Job สำหรับ "สร้าง" Pool ใหม่ด้วยข้อมูลจากฟอร์ม
         # (ใช้ Logic เดียวกับฟังก์ชัน config_dhcp)
         create_job = {
             "job_type": "configure_dhcp",
             "ip": ip,
-            "pool_name": request.form.get("pool_name"), # ซึ่งเป็นชื่อเดิม
+            "pool_name": request.form.get("pool_name"),  # ซึ่งเป็นชื่อเดิม
             "network_address": request.form.get("network_address"),
             "subnet_prefix": request.form.get("subnet_prefix"),
             "default_gateway": request.form.get("default_gateway"),
             "dns_servers": [
-                request.form.get("dns_server_1"), request.form.get("dns_server_2")
+                request.form.get("dns_server_1"),
+                request.form.get("dns_server_2"),
             ],
-            "exclude_start_ip": "", # ไม่จัดการ Exclude ในหน้า Edit
+            "exclude_start_ip": "",  # ไม่จัดการ Exclude ในหน้า Edit
             "exclude_end_ip": "",
         }
 
@@ -454,10 +458,13 @@ def edit_dhcp(ip, pool_name):
             if row.doc and row.doc.get("ip") == ip:
                 router_info_doc = row.doc
                 break
-        if not router_info_doc: return "Router credentials not found", 404
+        if not router_info_doc:
+            return "Router credentials not found", 404
 
         delete_job["user"] = create_job["user"] = router_info_doc.get("user")
-        delete_job["password"] = create_job["password"] = router_info_doc.get("password")
+        delete_job["password"] = create_job["password"] = router_info_doc.get(
+            "password"
+        )
 
         # 4. ส่ง Job ทั้งสองไปที่ RabbitMQ (ลบก่อนสร้าง)
         send_to_rabbitmq(json.dumps(delete_job).encode("utf-8"))
@@ -468,29 +475,37 @@ def edit_dhcp(ip, pool_name):
     # --- จัดการเมื่อผู้ใช้กดปุ่ม "Edit" เพื่อแสดงฟอร์ม ---
     # 1. ดึงข้อมูลล่าสุดจาก DB
     all_interface_docs = [interface_db.get(doc_id) for doc_id in interface_db]
-    filtered_docs = [doc for doc in all_interface_docs if doc and doc.get("router_ip") == ip]
-    latest_doc = sorted(filtered_docs, key=lambda x: x.get("timestamp", ""), reverse=True)[0]
+    filtered_docs = [
+        doc for doc in all_interface_docs if doc and doc.get("router_ip") == ip
+    ]
+    latest_doc = sorted(
+        filtered_docs, key=lambda x: x.get("timestamp", ""), reverse=True
+    )[0]
     dhcp_raw_text = latest_doc.get("dhcp_config_raw", "") if latest_doc else ""
 
     # 2. Parse หา Pool ที่ต้องการแก้ไข
     all_pools, _ = parse_dhcp_pools(dhcp_raw_text)
-    pool_to_edit = next((pool for pool in all_pools if pool.get("name") == pool_name), None)
-    if not pool_to_edit: return "DHCP Pool not found", 404
+    pool_to_edit = next(
+        (pool for pool in all_pools if pool.get("name") == pool_name), None
+    )
+    if not pool_to_edit:
+        return "DHCP Pool not found", 404
 
     # 3. เตรียมข้อมูลสำหรับ pre-fill ในฟอร์ม
     network_parts = pool_to_edit.get("network", " / ").split(" / ")
     pool_to_edit["network_address"] = network_parts[0]
     try:
-        pool_to_edit["subnet_prefix"] = ipaddress.IPv4Network(f"0.0.0.0/{network_parts[1]}").prefixlen
+        pool_to_edit["subnet_prefix"] = ipaddress.IPv4Network(
+            f"0.0.0.0/{network_parts[1]}"
+        ).prefixlen
     except Exception:
-        pool_to_edit["subnet_prefix"] = 24 # Fallback
+        pool_to_edit["subnet_prefix"] = 24  # Fallback
 
     dns_list = pool_to_edit.get("dns_servers", "").split()
     pool_to_edit["dns_server_1"] = dns_list[0] if len(dns_list) > 0 else ""
     pool_to_edit["dns_server_2"] = dns_list[1] if len(dns_list) > 1 else ""
 
     return render_template("edit_dhcp.html", router_ip=ip, pool=pool_to_edit)
-
 
 
 if __name__ == "__main__":

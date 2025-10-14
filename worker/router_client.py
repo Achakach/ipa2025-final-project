@@ -222,6 +222,7 @@ def configure_dhcp(
 
     return result.status
 
+
 def delete_dhcp_pool(ip, username, password, pool_name):
     """รัน Ansible Playbook เพื่อลบ DHCP pool"""
     private_data_dir = os.path.dirname(__file__)
@@ -245,6 +246,7 @@ def delete_dhcp_pool(ip, username, password, pool_name):
         raise Exception(f"Failed to delete DHCP pool {pool_name} for {ip}.")
 
     return result.status
+
 
 if __name__ == "__main__":
     pass
