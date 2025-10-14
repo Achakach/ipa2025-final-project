@@ -325,5 +325,30 @@ def configure_acl(ip, username, password, acl_number, rules, interface_name, dir
     return result.status
 
 
+def delete_acl(ip, username, password, acl_number):
+    """รัน Ansible Playbook เพื่อลบ ACL"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "acl_number": acl_number,
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/delete_acl_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to delete ACL {acl_number} for {ip}.")
+
+    return result.status
+
+
 if __name__ == "__main__":
     pass

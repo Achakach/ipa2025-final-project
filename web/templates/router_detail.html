@@ -52,6 +52,7 @@
                 <th>ACL Number</th>
                 <th>Rules</th>
                 <th>Applied to Interfaces</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -69,6 +70,12 @@
                     {% else %}
                         Not applied
                     {% endfor %}
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_acl', ip=router_ip) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete ACL {{ acl.name }}? This will remove it from all interfaces.');">
+                        <input type="hidden" name="acl_number" value="{{ acl.name }}">
+                        <button type="submit" style="background-color: #dc3545; color: white;">Delete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
@@ -252,6 +259,12 @@
         }
         else if (status === 'acl_config_sent') {
             alert('ACL configuration job has been sent successfully! The changes will be applied shortly.');
+            setTimeout(function() {
+                window.location.href = window.location.pathname;
+            }, 5000); // 5 วินาที
+        }
+        else if (status === 'acl_delete_sent') {
+            alert('ACL deletion job has been sent successfully! The changes will be applied shortly.');
             setTimeout(function() {
                 window.location.href = window.location.pathname;
             }, 5000); // 5 วินาที

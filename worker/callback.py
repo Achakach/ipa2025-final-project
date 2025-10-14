@@ -10,6 +10,7 @@ from router_client import (
     delete_dns,
     save_config,
     configure_acl,
+    delete_acl
 )
 from database import save_interface_status, save_backup_config
 
@@ -109,6 +110,11 @@ def callback(ch, method, props, body):
                 job.get("direction"),
             )
             print(f"Successfully sent ACL config job for {router_ip}")
+        elif job_type == "delete_acl":
+            acl_number = job.get("acl_number")
+            if acl_number:
+                delete_acl(router_ip, router_username, router_password, acl_number)
+                print(f"Successfully sent delete job for ACL {acl_number} on {router_ip}")
 
     except Exception as e:
         print(f" Error: {e}")

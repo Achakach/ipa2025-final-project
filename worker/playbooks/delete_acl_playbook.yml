@@ -1,0 +1,16 @@
+---
+- name: Delete Standard ACL
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Remove the specified IP access list
+      cisco.ios.ios_config:
+        lines:
+          - "no ip access-list standard {{ acl_number }}"

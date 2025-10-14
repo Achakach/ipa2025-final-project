@@ -665,5 +665,34 @@ def parse_acls(acl_raw, interface_raw):
     return list(acls.values())
 
 
+@sample.route("/router/<ip>/acl/delete", methods=["POST"])
+def delete_acl(ip):
+    acl_number = request.form.get("acl_number")
+
+    job = {
+        "job_type": "delete_acl",
+        "ip": ip,
+        "acl_number": acl_number,
+    }
+
+    # ค้นหา Credential
+    router_info_doc = None
+    for row in router_db.view("_all_docs", include_docs=True):
+        if row.doc and row.doc.get("ip") == ip:
+            router_info_doc = row.doc
+            break
+
+    if not router_info_doc:
+        return "Router credentials not found", 404
+
+    job["user"] = router_info_doc.get("user")
+    job["password"] = router_info_doc.get("password")
+
+    body_bytes = json.dumps(job).encode("utf-8")
+    send_to_rabbitmq(body_bytes)
+
+    return redirect(url_for("router_detail", ip=ip, status="acl_delete_sent"))
+
+
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)
