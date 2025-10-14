@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configure DHCP</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+        <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
+    </div>
+    <hr>
+
+    <h1>Configure DHCP Server</h1>
+    <h2>Router: {{ router_ip }}</h2>
+    <p>Enter the details for the new DHCP pool. All fields are required except for the exclude range.</p>
+
+    <form method="POST">
+        <label for="pool_name">DHCP Pool Name:</label><br>
+        <input type="text" id="pool_name" name="pool_name" placeholder="e.g., LAN-POOL" required><br><br>
+
+        <label for="network_address">Network Address:</label><br>
+        <input type="text" id="network_address" name="network_address" placeholder="e.g., 192.168.10.0" required><br><br>
+
+        <label for="subnet_prefix">Subnet Mask:</label><br>
+        <select id="subnet_prefix" name="subnet_prefix" required>
+            {% for i in range(24, 33) %}
+                <option value="{{ i }}">/{{ i }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="default_gateway">Default Gateway:</label><br>
+        <input type="text" id="default_gateway" name="default_gateway" placeholder="e.g., 192.168.10.1" required><br><br>
+
+        <label for="dns_server_1">Primary DNS Server (Optional):</label><br>
+        <input type="text" id="dns_server_1" name="dns_server_1" placeholder="e.g., 8.8.8.8"><br><br>
+
+        <label for="dns_server_2">Secondary DNS Server (Optional):</label><br>
+        <input type="text" id="dns_server_2" name="dns_server_2" placeholder="e.g., 8.8.4.4"><br><br>
+        <hr>
+        <h3>Exclude IP Address Range (Optional)</h3>
+
+        <label for="exclude_start_ip">Start IP:</label><br>
+        <input type="text" id="exclude_start_ip" name="exclude_start_ip" placeholder="e.g., 192.168.10.1"><br><br>
+
+        <label for="exclude_end_ip">End IP:</label><br>
+        <input type="text" id="exclude_end_ip" name="exclude_end_ip" placeholder="e.g., 192.168.10.10"><br><br>
+
+        <button type="submit">Apply DHCP Configuration</button>
+    </form>
+
+</body>
+</html>

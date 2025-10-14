@@ -1,0 +1,33 @@
+---
+- name: Configure DHCP Server
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Configure DHCP Excluded Addresses
+      cisco.ios.ios_config:
+        lines:
+          - "ip dhcp excluded-address {{ exclude_start_ip }} {{ exclude_end_ip }}"
+      when: exclude_start_ip is defined and exclude_start_ip != ''
+
+    - name: Configure DHCP Pool (Network and Gateway)
+      cisco.ios.ios_config:
+        lines:
+          - "network {{ network_address }} {{ subnet_mask }}"
+          - "default-router {{ default_gateway }}"
+        parents: "ip dhcp pool {{ pool_name }}"
+
+    - name: Configure DHCP Pool (DNS Servers)
+      cisco.ios.ios_config:
+        lines:
+          # ใช้ฟิลเตอร์ 'join' เพื่อรวม IP ทั้งหมดใน list ให้เป็น string เดียวโดยคั่นด้วย space
+          - "dns-server {{ dhcp_dns_servers | join(' ') }}"
+        parents: "ip dhcp pool {{ pool_name }}"
+      # ไม่ต้องใช้ loop แล้ว
+      when: dhcp_dns_servers is defined and dhcp_dns_servers | length > 0

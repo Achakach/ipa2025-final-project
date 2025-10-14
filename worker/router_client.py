@@ -1,6 +1,7 @@
 import ansible_runner
 import os
 import json
+import ipaddress
 
 
 def get_interfaces(ip, username, password):
@@ -167,6 +168,60 @@ def configure_dns(ip, username, password, dns_servers):
         raise Exception(f"Failed to configure DNS for {ip}. See logs for details.")
 
     return result.status
+
+
+
+def configure_dhcp(
+    ip,
+    username,
+    password,
+    pool_name,
+    network_address,
+    subnet_prefix,
+    default_gateway,
+    exclude_start_ip,
+    exclude_end_ip,
+    dns_servers
+):
+    """รัน Ansible Playbook เพื่อ config DHCP server"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    # --- ส่วนที่เปลี่ยนแปลง ---
+    # สร้าง object network จาก IP และ prefix ที่ได้รับมา
+    network_obj = ipaddress.IPv4Network(f"{network_address}/{subnet_prefix}", strict=False)
+    # ดึงค่า subnet mask ออกมาเป็น string (เช่น '255.255.255.0')
+    subnet_mask = str(network_obj.netmask)
+    # -----------------------
+
+    valid_dns_servers = [server for server in dns_servers if server]
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "pool_name": pool_name,
+        "network_address": network_address,
+        "subnet_mask": subnet_mask,  # <--- ส่ง subnet_mask ที่คำนวณแล้วไปแทน
+        "default_gateway": default_gateway,
+        "exclude_start_ip": exclude_start_ip,
+        "exclude_end_ip": exclude_end_ip,
+        "dhcp_dns_servers": valid_dns_servers
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/config_dhcp_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to configure DHCP for {ip}. See logs for details.")
+
+    return result.status
+
+
 
 
 if __name__ == "__main__":

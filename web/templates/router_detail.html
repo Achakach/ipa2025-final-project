@@ -42,6 +42,9 @@
     <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
         <button>Configure DNS</button>
     </a>
+    <a href="{{ url_for('config_dhcp', ip=router_ip) }}" style="margin-left: 10px;">
+        <button>Configure DHCP</button>
+    </a>
     {% if current_dns %}
         <ul>
         {% for server in current_dns %}
@@ -123,6 +126,10 @@
         }
         else if (status === 'dns_config_sent') {
             alert('DNS configuration job has been sent successfully! The changes will be applied shortly.');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        else if (status === 'dhcp_config_sent') {
+            alert('DHCP configuration job has been sent successfully! The changes will be applied shortly.');
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>

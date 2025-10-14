@@ -304,5 +304,48 @@ def config_dns(ip):
     return render_template("config_dns.html", router_ip=ip)
 
 
+
+
+
+@sample.route("/router/<ip>/dhcp", methods=["GET", "POST"])
+def config_dhcp(ip):
+    if request.method == "POST":
+        # 1. ดึงข้อมูลจากฟอร์ม
+        job = {
+            "job_type": "configure_dhcp",
+            "ip": ip,
+            "pool_name": request.form.get("pool_name"),
+            "network_address": request.form.get("network_address"),
+            "subnet_prefix": request.form.get("subnet_prefix"),
+            "default_gateway": request.form.get("default_gateway"),
+            "exclude_start_ip": request.form.get("exclude_start_ip"),
+            "exclude_end_ip": request.form.get("exclude_end_ip"),
+            "dns_servers": [request.form.get("dns_server_1"), request.form.get("dns_server_2")]
+        }
+
+        # 2. ค้นหา Credential ของ Router
+        router_info_doc = None
+        for row in router_db.view("_all_docs", include_docs=True):
+            if row.doc and row.doc.get("ip") == ip:
+                router_info_doc = row.doc
+                break
+
+        if not router_info_doc:
+            return "Router credentials not found", 404
+
+        job["user"] = router_info_doc.get("user")
+        job["password"] = router_info_doc.get("password")
+
+        # 3. ส่ง Job ไปที่ RabbitMQ
+        body_bytes = json.dumps(job).encode("utf-8")
+        send_to_rabbitmq(body_bytes)
+
+        # 4. Redirect กลับไปพร้อม Alert
+        # เราจะสร้าง status ใหม่ชื่อ 'dhcp_config_sent'
+        return redirect(url_for("router_detail", ip=ip, status="dhcp_config_sent"))
+
+    # ถ้าเป็น GET request, แสดงฟอร์ม
+    return render_template("config_dhcp.html", router_ip=ip)
+
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)
