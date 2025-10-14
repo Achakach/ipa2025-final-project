@@ -19,6 +19,9 @@ def save_interface_status(router_ip, status_data):
         "interfaces": status_data.get("interfaces", []),
         "dns_servers": status_data.get("dns_servers", []),
         "dhcp_config_raw": status_data.get("dhcp_config_raw", ""),
+        "acl_config_raw": status_data.get("acl_config_raw", ""),
+        #vvvvthis one tell which int use which acl :)
+        "interface_detail_raw": status_data.get("interface_detail_raw", ""),
     }
     db.save(data)
 

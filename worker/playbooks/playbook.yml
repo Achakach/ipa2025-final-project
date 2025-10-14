@@ -48,6 +48,18 @@
           - "show run | section dhcp"
       register: result_dhcp_raw
 
+    - name: Run "show ip access-lists"
+      cisco.ios.ios_command:
+        commands:
+          - "show ip access-lists"
+      register: result_acl_raw
+
+    - name: Run "show ip interface"
+      cisco.ios.ios_command:
+        commands:
+          - "show ip interface"
+      register: result_interface_detail_raw
+
     # vvv Task สุดท้าย: รวมข้อมูลทั้งหมด vvv
     - name: Set final combined output as a fact
       set_fact:
@@ -55,3 +67,5 @@
           interfaces: "{{ parsed_interfaces.parsed }}"
           dns_servers: "{{ dns_servers_list }}"
           dhcp_config_raw: "{{ result_dhcp_raw.stdout[0] | default('') }}"
+          acl_config_raw: "{{ result_acl_raw.stdout[0] | default('') }}"
+          interface_detail_raw: "{{ result_interface_detail_raw.stdout[0] | default('') }}"

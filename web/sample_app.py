@@ -117,6 +117,10 @@ def router_detail(ip):
     if latest_interface_data and "dns_servers" in latest_interface_data:
         current_dns_servers = latest_interface_data["dns_servers"]
 
+    acl_raw_text = latest_interface_data.get("acl_config_raw", "") if latest_interface_data else ""
+    interface_detail_raw_text = latest_interface_data.get("interface_detail_raw", "") if latest_interface_data else ""
+    acls = parse_acls(acl_raw_text, interface_detail_raw_text)
+
     return render_template(
         "router_detail.html",
         router_ip=ip,
@@ -125,6 +129,7 @@ def router_detail(ip):
         current_dns=current_dns_servers,
         dhcp_pools=dhcp_pools,
         dhcp_excluded=excluded_addresses,
+        acls=acls
     )
 
 
@@ -610,6 +615,48 @@ def config_acl(ip):
 
     # GET request
     return render_template("config_acl.html", router_ip=ip)
+
+
+def parse_acls(acl_raw, interface_raw):
+    """
+    แปลง raw config ของ ACL และ Interface ให้เป็นข้อมูลที่มีโครงสร้าง
+    """
+    if not acl_raw or not interface_raw:
+        return []
+
+    acls = {}
+    # Parse ACL definitions
+    current_acl = None
+    for line in acl_raw.splitlines():
+        acl_match = re.search(r"Standard IP access list (\d+)", line)
+        if acl_match:
+            current_acl = acl_match.group(1)
+            acls[current_acl] = {"name": current_acl, "rules": [], "interfaces": []}
+            continue
+        
+        if current_acl and line.startswith(" "):
+            acls[current_acl]["rules"].append(line.strip())
+
+    # Parse interface assignments
+    current_interface = None
+    for line in interface_raw.splitlines():
+        if "line protocol is" in line:
+            current_interface = line.split()[0]
+            continue
+        
+        inbound_match = re.search(r"Inbound  access list is (.+)", line)
+        if current_interface and inbound_match:
+            acl_num = inbound_match.group(1).strip()
+            if acl_num in acls:
+                acls[acl_num]["interfaces"].append(f"{current_interface} (in)")
+
+        outbound_match = re.search(r"Outgoing access list is (.+)", line)
+        if current_interface and outbound_match:
+            acl_num = outbound_match.group(1).strip()
+            if acl_num in acls:
+                acls[acl_num]["interfaces"].append(f"{current_interface} (out)")
+
+    return list(acls.values())
 
 
 if __name__ == "__main__":

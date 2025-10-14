@@ -6,9 +6,6 @@
             <form method="POST" action="{{ url_for('save_configuration', ip=router_ip) }}" style="display:inline; margin-left: 20px;" onsubmit="return confirm('Are you sure you want to save the current running-config to startup-config?');">
                 <button type="submit" style="background-color: #2fce54; color: white;">Save Configuration</button>
             </form>
-    <a href="{{ url_for('config_acl', ip=router_ip) }}" style="margin-left: 10px;">
-        <button>Configure ACL</button>
-    </a>
         </div>
         <hr>
     <h1>Router: {{ router_ip }}</h1>
@@ -43,6 +40,43 @@
                 </tbody>
         </table>
     <br>
+    <hr>
+    <h2>ACL Configuration</h2>
+    <a href="{{ url_for('config_acl', ip=router_ip) }}" style="margin-left: 10px;">
+        <button>Configure ACL</button>
+    </a>
+    {% if acls %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ACL Number</th>
+                <th>Rules</th>
+                <th>Applied to Interfaces</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for acl in acls %}
+            <tr>
+                <td>{{ acl.name }}</td>
+                <td>
+                    {% for rule in acl.rules %}
+                        {{ rule }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for interface in acl.interfaces %}
+                        {{ interface }}<br>
+                    {% else %}
+                        Not applied
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No Standard ACLs are currently configured on this router.</p>
+    {% endif %}
     <hr>
     <h2>Current DNS Servers</h2>
     <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
