@@ -7,7 +7,7 @@ from router_client import (
     configure_dns,
     configure_dhcp,
     delete_dhcp_pool,
-    delete_dns
+    delete_dns,
 )
 from database import save_interface_status, save_backup_config
 
@@ -68,7 +68,9 @@ def callback(ch, method, props, body):
             dns_server = job.get("dns_server")
             if dns_server:
                 delete_dns(router_ip, router_username, router_password, dns_server)
-                print(f"Successfully sent delete job for DNS server {dns_server} on {router_ip}")
+                print(
+                    f"Successfully sent delete job for DNS server {dns_server} on {router_ip}"
+                )
 
         elif job_type == "configure_dhcp":
             configure_dhcp(
