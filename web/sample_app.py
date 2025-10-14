@@ -117,8 +117,14 @@ def router_detail(ip):
     if latest_interface_data and "dns_servers" in latest_interface_data:
         current_dns_servers = latest_interface_data["dns_servers"]
 
-    acl_raw_text = latest_interface_data.get("acl_config_raw", "") if latest_interface_data else ""
-    interface_detail_raw_text = latest_interface_data.get("interface_detail_raw", "") if latest_interface_data else ""
+    acl_raw_text = (
+        latest_interface_data.get("acl_config_raw", "") if latest_interface_data else ""
+    )
+    interface_detail_raw_text = (
+        latest_interface_data.get("interface_detail_raw", "")
+        if latest_interface_data
+        else ""
+    )
     acls = parse_acls(acl_raw_text, interface_detail_raw_text)
 
     return render_template(
@@ -129,7 +135,7 @@ def router_detail(ip):
         current_dns=current_dns_servers,
         dhcp_pools=dhcp_pools,
         dhcp_excluded=excluded_addresses,
-        acls=acls
+        acls=acls,
     )
 
 
@@ -633,7 +639,7 @@ def parse_acls(acl_raw, interface_raw):
             current_acl = acl_match.group(1)
             acls[current_acl] = {"name": current_acl, "rules": [], "interfaces": []}
             continue
-        
+
         if current_acl and line.startswith(" "):
             acls[current_acl]["rules"].append(line.strip())
 
@@ -643,7 +649,7 @@ def parse_acls(acl_raw, interface_raw):
         if "line protocol is" in line:
             current_interface = line.split()[0]
             continue
-        
+
         inbound_match = re.search(r"Inbound  access list is (.+)", line)
         if current_interface and inbound_match:
             acl_num = inbound_match.group(1).strip()
