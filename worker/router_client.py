@@ -273,5 +273,29 @@ def delete_dns(ip, username, password, dns_server):
     return result.status
 
 
+def save_config(ip, username, password):
+    """รัน Ansible Playbook เพื่อบันทึก running-config ไปยัง startup-config"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/save_config_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to save configuration for {ip}.")
+
+    return result.status
+
+
 if __name__ == "__main__":
     pass

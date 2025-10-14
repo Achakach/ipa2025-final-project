@@ -3,6 +3,9 @@
     <body>
         <div style="margin-bottom: 15px;">
             <a href="{{ url_for('main') }}"><button>Home</button></a>
+            <form method="POST" action="{{ url_for('save_configuration', ip=router_ip) }}" style="display:inline; margin-left: 20px;" onsubmit="return confirm('Are you sure you want to save the current running-config to startup-config?');">
+                <button type="submit" style="background-color: #2fce54; color: white;">Save Configuration</button>
+            </form>
         </div>
         <hr>
     <h1>Router: {{ router_ip }}</h1>
@@ -204,6 +207,11 @@
             setTimeout(function() {
                 window.location.href = window.location.pathname;
             }, 5000); // 5 วินาที
+        }
+        else if (status === 'save_sent') {
+            alert('Save configuration job has been sent successfully!');
+            // ไม่ต้องรีเฟรชสำหรับหน้านี้ แค่แจ้งให้ทราบ
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>
     </body>

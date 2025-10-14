@@ -1,0 +1,16 @@
+---
+- name: Save Running Configuration
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Execute write memory to save configuration
+      cisco.ios.ios_command:
+        commands:
+          - "write memory"

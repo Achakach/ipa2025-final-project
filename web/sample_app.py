@@ -540,5 +540,29 @@ def edit_dhcp(ip, pool_name):
     return render_template("edit_dhcp.html", router_ip=ip, pool=pool_to_edit)
 
 
+@sample.route("/router/<ip>/save", methods=["POST"])
+def save_configuration(ip):
+    job = {"job_type": "save_config", "ip": ip}
+
+    # ค้นหา Credential
+    router_info_doc = None
+    for row in router_db.view("_all_docs", include_docs=True):
+        if row.doc and row.doc.get("ip") == ip:
+            router_info_doc = row.doc
+            break
+
+    if not router_info_doc:
+        return "Router credentials not found", 404
+
+    job["user"] = router_info_doc.get("user")
+    job["password"] = router_info_doc.get("password")
+
+    body_bytes = json.dumps(job).encode("utf-8")
+    send_to_rabbitmq(body_bytes)
+
+    # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
+    return redirect(url_for("router_detail", ip=ip, status="save_sent"))
+
+
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)
