@@ -563,6 +563,52 @@ def save_configuration(ip):
     # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
     return redirect(url_for("router_detail", ip=ip, status="save_sent"))
 
+@sample.route("/router/<ip>/acl", methods=["GET", "POST"])
+def config_acl(ip):
+    if request.method == "POST":
+        # 1. แยก Rules ออกจากข้อมูล Form อื่นๆ
+        rules = []
+        # ใช้ regex เพื่อหา key ทั้งหมดที่ตรงกับรูปแบบของ rule (เช่น action_1, source_ip_1)
+        rule_keys = [key for key in request.form if re.match(r"action_\d+", key)]
+        for key in rule_keys:
+            # ดึงหมายเลข rule จาก key (เช่น 'action_1' -> '1')
+            rule_num = key.split('_')[1]
+            rule = {
+                "action": request.form.get(f"action_{rule_num}"),
+                "source_ip": request.form.get(f"source_ip_{rule_num}"),
+                "wildcard": request.form.get(f"wildcard_{rule_num}"),
+            }
+            rules.append(rule)
+
+        # 2. สร้าง Job
+        job = {
+            "job_type": "configure_acl",
+            "ip": ip,
+            "acl_number": request.form.get("acl_number"),
+            "rules": rules,
+            "interface_name": request.form.get("interface_name"),
+            "direction": request.form.get("direction"),
+        }
+
+        # 3. ค้นหา Credential และส่ง Job (เหมือนเดิม)
+        router_info_doc = None
+        for row in router_db.view("_all_docs", include_docs=True):
+            if row.doc and row.doc.get("ip") == ip:
+                router_info_doc = row.doc
+                break
+        if not router_info_doc: return "Router credentials not found", 404
+
+        job["user"] = router_info_doc.get("user")
+        job["password"] = router_info_doc.get("password")
+
+        body_bytes = json.dumps(job).encode("utf-8")
+        send_to_rabbitmq(body_bytes)
+
+        return redirect(url_for("router_detail", ip=ip, status="acl_config_sent"))
+
+    # GET request
+    return render_template("config_acl.html", router_ip=ip)
+
 
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=8080)

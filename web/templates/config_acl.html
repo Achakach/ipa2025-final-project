@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configure ACL</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <style>
+        .rule-row { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; }
+        .rule-row select, .rule-row input { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+        <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
+    </div>
+    <hr>
+
+    <h1>Configure Standard ACL</h1>
+    <h2>Router: {{ router_ip }}</h2>
+
+    <form method="POST">
+        <h3>ACL Definition</h3>
+        <label for="acl_number">ACL Number (1-99):</label><br>
+        <input type="number" id="acl_number" name="acl_number" min="1" max="99" required><br><br>
+
+        <h3>Rules</h3>
+        <div id="rules-container">
+            </div>
+        <button type="button" onclick="addRule()">+ Add Rule</button>
+        <hr>
+
+        <h3>Apply to Interface</h3>
+        <label for="interface_name">Interface Name:</label><br>
+        <input type="text" id="interface_name" name="interface_name" placeholder="e.g., GigabitEthernet0/1" required><br><br>
+
+        <label for="direction">Direction:</label><br>
+        <select id="direction" name="direction" required>
+            <option value="in">Inbound (in)</option>
+            <option value="out">Outbound (out)</option>
+        </select><br><br>
+
+        <button type="submit">Apply ACL Configuration</button>
+    </form>
+
+    <script>
+        let ruleCounter = 0;
+
+        function addRule() {
+            ruleCounter++;
+            const rulesContainer = document.getElementById('rules-container');
+            const newRule = document.createElement('div');
+            newRule.className = 'rule-row';
+            newRule.id = 'rule-' + ruleCounter;
+            newRule.innerHTML = `
+                <strong>Rule ${ruleCounter}</strong><br>
+                <select name="action_${ruleCounter}" required>
+                    <option value="permit">Permit</option>
+                    <option value="deny">Deny</option>
+                </select>
+                <input type="text" name="source_ip_${ruleCounter}" placeholder="Source IP (e.g., 192.168.1.0)" required>
+                <input type="text" name="wildcard_${ruleCounter}" placeholder="Wildcard Mask (e.g., 0.0.0.255)" required>
+                <button type="button" onclick="removeRule(${ruleCounter})">Remove</button>
+            `;
+            rulesContainer.appendChild(newRule);
+        }
+
+        function removeRule(ruleId) {
+            const ruleToRemove = document.getElementById('rule-' + ruleId);
+            ruleToRemove.remove();
+        }
+
+        // Add one rule by default when the page loads
+        window.onload = addRule;
+    </script>
+
+</body>
+</html>

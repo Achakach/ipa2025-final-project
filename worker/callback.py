@@ -9,6 +9,7 @@ from router_client import (
     delete_dhcp_pool,
     delete_dns,
     save_config,
+    configure_acl
 )
 from database import save_interface_status, save_backup_config
 
@@ -97,6 +98,18 @@ def callback(ch, method, props, body):
         elif job_type == "save_config":
             save_config(router_ip, router_username, router_password)
             print(f"Successfully sent save configuration job for {router_ip}")
+        elif job_type == "configure_acl":
+            configure_acl(
+                router_ip,
+                router_username,
+                router_password,
+                job.get("acl_number"),
+                job.get("rules", []),
+                job.get("interface_name"),
+                job.get("direction"),
+            )
+            print(f"Successfully sent ACL config job for {router_ip}")
+
 
     except Exception as e:
         print(f" Error: {e}")

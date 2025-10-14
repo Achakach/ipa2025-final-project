@@ -297,5 +297,32 @@ def save_config(ip, username, password):
     return result.status
 
 
+def configure_acl(ip, username, password, acl_number, rules, interface_name, direction):
+    """รัน Ansible Playbook เพื่อสร้างและใช้งาน ACL"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "acl_number": acl_number,
+        "rules": rules,
+        "interface_name": interface_name,
+        "direction": direction,
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/config_acl_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to configure ACL {acl_number} for {ip}.")
+
+    return result.status
+
 if __name__ == "__main__":
     pass

@@ -1,0 +1,24 @@
+---
+- name: Configure Standard ACL
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ router_user }}"
+    ansible_password: "{{ router_pass }}"
+    ansible_connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Define ACL rules
+      cisco.ios.ios_config:
+        lines:
+          - "{{ item.action }} {{ item.source_ip }} {{ item.wildcard }}"
+        parents: "ip access-list standard {{ acl_number }}"
+      loop: "{{ rules }}"
+
+    - name: Apply ACL to interface
+      cisco.ios.ios_config:
+        lines:
+          - "ip access-group {{ acl_number }} {{ direction }}"
+        parents: "interface {{ interface_name }}"
