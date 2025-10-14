@@ -8,7 +8,7 @@ from router_client import (
     configure_dhcp,
     delete_dhcp_pool,
     delete_dns,
-    save_config
+    save_config,
 )
 from database import save_interface_status, save_backup_config
 
