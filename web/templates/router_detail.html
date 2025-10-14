@@ -42,9 +42,6 @@
     <a href="{{ url_for('config_dns', ip=router_ip) }}" style="margin-left: 10px;">
         <button>Configure DNS</button>
     </a>
-    <a href="{{ url_for('config_dhcp', ip=router_ip) }}" style="margin-left: 10px;">
-        <button>Configure DHCP</button>
-    </a>
     {% if current_dns %}
         <ul>
         {% for server in current_dns %}
@@ -53,6 +50,57 @@
         </ul>
     {% else %}
         <p>No DNS servers are currently configured on this router.</p>
+    {% endif %}
+    <hr>
+    <h2>DHCP Configuration</h2>
+    <a href="{{ url_for('config_dhcp', ip=router_ip) }}" style="margin-left: 10px;">
+        <button>Configure DHCP</button>
+    </a>
+    <h4>Excluded IP Addresses</h4>
+    {% if dhcp_excluded %}
+        <ul>
+        {% for address_range in dhcp_excluded %}
+            <li>{{ address_range }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No excluded addresses configured.</p>
+    {% endif %}
+
+    <h4>DHCP Pools</h4>
+    {% if dhcp_pools %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Pool Name</th>
+                <th>Network</th>
+                <th>Default Gateway</th>
+                <th>DNS Servers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pool in dhcp_pools %}
+            <tr>
+                <td>{{ pool.name }}</td>
+                <td>{{ pool.network | default('N/A') }}</td>
+                <td>{{ pool.default_router | default('N/A') }}</td>
+                <td>{{ pool.dns_servers | default('N/A') }}</td>
+                <td>
+                    <a href="{{ url_for('edit_dhcp', ip=router_ip, pool_name=pool.name) }}">
+                        <button>Edit</button>
+                    </a>
+                    <form method="POST" action="{{ url_for('delete_dhcp', ip=router_ip) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete the DHCP pool \'{{ pool.name }}\'?');">
+                        <input type="hidden" name="pool_name" value="{{ pool.name }}">
+                        <button type="submit" style="background-color: #dc3545; color: white;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No DHCP pools are currently configured on this router.</p>
     {% endif %}
     <hr>
     <h2>Backup History</h2>
@@ -131,6 +179,19 @@
         else if (status === 'dhcp_config_sent') {
             alert('DHCP configuration job has been sent successfully! The changes will be applied shortly.');
             window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        else if (status === 'dhcp_delete_sent') {
+            alert('DHCP pool deletion job has been sent successfully! The changes will be applied shortly.');
+            // หน่วงเวลาเล็กน้อยก่อนรีเฟรช เพื่อให้เวลา Worker ทำงาน
+            setTimeout(function() {
+                window.location.href = window.location.pathname;
+            }, 5000); // 5 วินาที
+        }
+        else if (status === 'dhcp_edit_sent') {
+            alert('DHCP pool update job has been sent successfully! The changes will be applied shortly.');
+            setTimeout(function() {
+                window.location.href = window.location.pathname;
+            }, 5000); // 5 วินาที
         }
     </script>
     </body>

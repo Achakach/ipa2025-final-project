@@ -42,9 +42,16 @@
       # วนลูปอ่านทุกบรรทัดที่ได้มาจากคำสั่งก่อนหน้า
       loop: "{{ result_dns_raw.stdout_lines | flatten }}"
 
+    - name: Run "show run | section dhcp"
+      cisco.ios.ios_command:
+        commands:
+          - "show run | section dhcp"
+      register: result_dhcp_raw
+
     # vvv Task สุดท้าย: รวมข้อมูลทั้งหมด vvv
     - name: Set final combined output as a fact
       set_fact:
         structured_output:
           interfaces: "{{ parsed_interfaces.parsed }}"
           dns_servers: "{{ dns_servers_list }}"
+          dhcp_config_raw: "{{ result_dhcp_raw.stdout[0] | default('') }}"

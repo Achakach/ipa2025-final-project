@@ -222,6 +222,29 @@ def configure_dhcp(
 
     return result.status
 
+def delete_dhcp_pool(ip, username, password, pool_name):
+    """รัน Ansible Playbook เพื่อลบ DHCP pool"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "pool_name": pool_name,
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/delete_dhcp_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to delete DHCP pool {pool_name} for {ip}.")
+
+    return result.status
 
 if __name__ == "__main__":
     pass

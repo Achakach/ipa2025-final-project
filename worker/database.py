@@ -18,6 +18,7 @@ def save_interface_status(router_ip, status_data):
         "timestamp": datetime.now(UTC).isoformat(),
         "interfaces": status_data.get("interfaces", []),
         "dns_servers": status_data.get("dns_servers", []),
+        "dhcp_config_raw": status_data.get("dhcp_config_raw", ""),
     }
     db.save(data)
 

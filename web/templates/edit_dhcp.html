@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit DHCP Pool</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div style="margin-bottom: 15px;">
+        <a href="{{ url_for('main') }}"><button>Home</button></a>
+        <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
+    </div>
+    <hr>
+
+    <h1>Edit DHCP Pool: {{ pool.name }}</h1>
+    <h2>Router: {{ router_ip }}</h2>
+
+    <form method="POST">
+        <label for="pool_name">DHCP Pool Name:</label><br>
+        <input type="text" id="pool_name" name="pool_name" value="{{ pool.name }}" readonly style="background-color: #eee;"><br><br>
+
+        <label for="network_address">Network Address:</label><br>
+        <input type="text" id="network_address" name="network_address" value="{{ pool.network_address }}" required><br><br>
+
+        <label for="subnet_prefix">Subnet Mask:</label><br>
+        <select id="subnet_prefix" name="subnet_prefix" required>
+            {% for i in range(24, 33) %}
+                <option value="{{ i }}" {% if i == pool.subnet_prefix %}selected{% endif %}>/{{ i }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="default_gateway">Default Gateway:</label><br>
+        <input type="text" id="default_gateway" name="default_gateway" value="{{ pool.default_router }}" required><br><br>
+
+        <label for="dns_server_1">Primary DNS Server (Optional):</label><br>
+        <input type="text" id="dns_server_1" name="dns_server_1" value="{{ pool.dns_server_1 }}"><br><br>
+
+        <label for="dns_server_2">Secondary DNS Server (Optional):</label><br>
+        <input type="text" id="dns_server_2" name="dns_server_2" value="{{ pool.dns_server_2 }}"><br><br>
+
+        <p><i>Note: Excluded address ranges are not editable from this interface.</i></p>
+
+        <button type="submit">Apply Changes</button>
+    </form>
+
+</body>
+</html>
