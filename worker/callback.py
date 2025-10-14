@@ -9,7 +9,7 @@ from router_client import (
     delete_dhcp_pool,
     delete_dns,
     save_config,
-    configure_acl
+    configure_acl,
 )
 from database import save_interface_status, save_backup_config
 
@@ -109,7 +109,6 @@ def callback(ch, method, props, body):
                 job.get("direction"),
             )
             print(f"Successfully sent ACL config job for {router_ip}")
-
 
     except Exception as e:
         print(f" Error: {e}")

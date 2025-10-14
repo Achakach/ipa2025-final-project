@@ -563,6 +563,7 @@ def save_configuration(ip):
     # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
     return redirect(url_for("router_detail", ip=ip, status="save_sent"))
 
+
 @sample.route("/router/<ip>/acl", methods=["GET", "POST"])
 def config_acl(ip):
     if request.method == "POST":
@@ -572,7 +573,7 @@ def config_acl(ip):
         rule_keys = [key for key in request.form if re.match(r"action_\d+", key)]
         for key in rule_keys:
             # ดึงหมายเลข rule จาก key (เช่น 'action_1' -> '1')
-            rule_num = key.split('_')[1]
+            rule_num = key.split("_")[1]
             rule = {
                 "action": request.form.get(f"action_{rule_num}"),
                 "source_ip": request.form.get(f"source_ip_{rule_num}"),
@@ -596,7 +597,8 @@ def config_acl(ip):
             if row.doc and row.doc.get("ip") == ip:
                 router_info_doc = row.doc
                 break
-        if not router_info_doc: return "Router credentials not found", 404
+        if not router_info_doc:
+            return "Router credentials not found", 404
 
         job["user"] = router_info_doc.get("user")
         job["password"] = router_info_doc.get("password")
