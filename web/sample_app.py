@@ -316,6 +316,36 @@ def config_dns(ip):
     return render_template("config_dns.html", router_ip=ip)
 
 
+@sample.route("/router/<ip>/dns/delete", methods=["POST"])
+def delete_dns_server(ip):
+    dns_to_delete = request.form.get("dns_server")
+
+    job = {
+        "job_type": "delete_dns",
+        "ip": ip,
+        "dns_server": dns_to_delete,
+    }
+
+    # ค้นหา Credential
+    router_info_doc = None
+    for row in router_db.view("_all_docs", include_docs=True):
+        if row.doc and row.doc.get("ip") == ip:
+            router_info_doc = row.doc
+            break
+
+    if not router_info_doc:
+        return "Router credentials not found", 404
+
+    job["user"] = router_info_doc.get("user")
+    job["password"] = router_info_doc.get("password")
+
+    body_bytes = json.dumps(job).encode("utf-8")
+    send_to_rabbitmq(body_bytes)
+
+    # ส่งกลับไปหน้ารายละเอียดพร้อม pop-up
+    return redirect(url_for("router_detail", ip=ip, status="dns_delete_sent"))
+
+
 @sample.route("/router/<ip>/dhcp", methods=["GET", "POST"])
 def config_dhcp(ip):
     if request.method == "POST":

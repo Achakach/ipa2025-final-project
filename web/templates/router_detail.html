@@ -45,7 +45,12 @@
     {% if current_dns %}
         <ul>
         {% for server in current_dns %}
-            <li>{{ server }}</li>
+            <li>{{ server }}
+                <form method="POST" action="{{ url_for('delete_dns_server', ip=router_ip) }}" style="display:inline; margin-left: 10px;" onsubmit="return confirm('Are you sure you want to delete DNS server \'{{ server }}\'?');">
+                    <input type="hidden" name="dns_server" value="{{ server }}">
+                    <button type="submit" style="font-size: 0.8em; padding: 2px 5px; background-color: #dc3545; color: white;">Delete</button>
+                </form>
+            </li>
         {% endfor %}
         </ul>
     {% else %}
@@ -175,6 +180,13 @@
         else if (status === 'dns_config_sent') {
             alert('DNS configuration job has been sent successfully! The changes will be applied shortly.');
             window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        else if (status === 'dns_delete_sent') {
+            alert('DNS server deletion job has been sent! The changes will be applied shortly.');
+            // หน่วงเวลาก่อนรีเฟรช
+            setTimeout(function() {
+                window.location.href = window.location.pathname;
+            }, 5000); // 5 วินาที
         }
         else if (status === 'dhcp_config_sent') {
             alert('DHCP configuration job has been sent successfully! The changes will be applied shortly.');

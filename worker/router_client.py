@@ -248,5 +248,30 @@ def delete_dhcp_pool(ip, username, password, pool_name):
     return result.status
 
 
+def delete_dns(ip, username, password, dns_server):
+    """รัน Ansible Playbook เพื่อลบ DNS server ที่ระบุ"""
+    private_data_dir = os.path.dirname(__file__)
+    inventory = {"all": {"hosts": {ip: None}}}
+
+    extravars = {
+        "router_user": username,
+        "router_pass": password,
+        "dns_server": dns_server,
+    }
+
+    result = ansible_runner.run(
+        private_data_dir=private_data_dir,
+        playbook="playbooks/delete_dns_playbook.yml",
+        inventory=inventory,
+        extravars=extravars,
+        quiet=False,
+    )
+
+    if result.status == "failed":
+        raise Exception(f"Failed to delete DNS server {dns_server} for {ip}.")
+
+    return result.status
+
+
 if __name__ == "__main__":
     pass
