@@ -1,9 +1,10 @@
 <html>
 <head>
     <title>Configure DNS</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/config_dns.css" />
 </head>
 <body>
+    <div class="container">
     <div style="margin-bottom: 15px;">
         <a href="{{ url_for('main') }}"><button>Home</button></a>
         <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
@@ -21,8 +22,8 @@
         <label for="dns2">Secondary DNS Server:</label><br>
         <input type="text" id="dns2" name="dns_server_2" placeholder="e.g., 8.8.4.4"><br><br>
 
-        <button type="submit">Apply DNS Configuration</button>
+        <button type="submit" class="btn-primary-submit">Apply DNS Configuration</button>
     </form>
-
+    </div>
 </body>
 </html>
