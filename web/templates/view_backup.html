@@ -1,9 +1,10 @@
 <html>
     <head>
         <title>View Backup - {{ backup.router_ip }}</title>
-        <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/static/view_backup.css" />
     </head>
 <body>
+    <div class="container">
     <div style="margin-bottom: 15px;">
         <a href="{{ url_for('main') }}"><button>Home</button></a>
     </div>
@@ -12,17 +13,17 @@
     <p><strong>Timestamp:</strong> {{ backup.timestamp }}</p>
 
     <a href="/backup/{{ backup._id }}/download" style="margin-right: 5px;">
-        <button>Download this config</button>
+        <button class="btn-secondary">Download this config</button>
     </a>
 
     <form method="POST" action="/backup/{{ backup._id }}/restore" style="display:inline;" onsubmit="return confirm('Are you sure you want to restore this configuration? This can have serious consequences.');">
-        <button type="submit" style="background-color: #dc3545; color: white;">Restore this config</button>
+        <button type="submit" class="btn-danger">Restore this config</button>
     </form>
 
     <hr>
 
     <h2>Configuration Content:</h2>
-    <pre style="background-color: #f4f4f4; border: 1px solid #ddd; padding: 10px; white-space: pre-wrap;">{{ backup.config }}</pre>
-
+    <pre>{{ backup.config }}</pre>
+    </div>
 </body>
 </html>
