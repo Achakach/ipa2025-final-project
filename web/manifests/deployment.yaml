@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ipa2025-msapp-web
-          image: fewza49144/web:latest
+          image: "kachathana/web:latest" # <--- !!! แก้ไขตรงนี้
           ports:
             - containerPort: 8080
           envFrom:
