@@ -1,34 +1,44 @@
 <html>
+
 <head>
-    <title>Sample app</title>
-    <link rel="stylesheet" href="/static/style.css" />
+  <title>Sample app</title>
+  <link rel="stylesheet" href="/static/index.css" />
 </head>
+
 <body>
+  <div class="container">
+
     <div style="margin-bottom: 15px;">
-        <a href="{{ url_for('main') }}"><button>Home</button></a>
+      <a href="{{ url_for('main') }}"><button>Home</button></a>
     </div>
     <hr>
     <h1>Router Viewer</h1>
-  <form method="POST" action="/add">
-    <input name="ip" placeholder="Router IP" required />
-    <input name="user" placeholder="User" required />
-    <input name="password" placeholder="password" required />
-    <button type="submit">Add Router</button>
-  </form>
-  <h2>Routers List</h2>
-  <ul>
-    {% for it in items %}
+    <form method="POST" action="/add">
+      <input name="ip" placeholder="Router IP" required />
+      <input name="user" placeholder="User" required />
+      <input name="password" placeholder="password" required />
+      <button type="submit">Add Router</button>
+    </form>
+    <h2>Routers List</h2>
+    <ul>
+      {% for it in items %}
       <li>
-	       <a href="/router/{{ it.ip }}">{{ it.ip }}</a> - {{ it.user }} - {{ it.password }}
-	<form method="POST" action="/delete" style="display:inline">
-          <input type="hidden" name="id" value="{{ it._id }}" />
-      		<button type="submit">Delete</button>
-	</form>
+        <div class="router-info">
+          <a href="/router/{{ it.ip }}"><strong>IP:</strong> {{ it.ip }}</a>
+          <span><strong>User:</strong> {{ it.user }} <strong>Password:</strong> {{ it.password }}</span>
 
+        </div>
 
+        <form method="POST" action="/delete" style="display:inline">
+                    <input type="hidden" name="id" value="{{ it._id }}" />
+                <button type="submit">Delete</button>
+        </form>
+             
       </li>
-    {% endfor %}
-  </ul>
+      {% endfor %}
+    </ul>
+  </div>
 
 </body>
+
 </html>

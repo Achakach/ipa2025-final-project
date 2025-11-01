@@ -1,1 +1,120 @@
-body {background: lightsteelblue;}
+/* --- General Styles --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3e5f5; /* ม่วงอ่อน (Light Purple) */
+    color: #333;
+    margin: 0;
+    padding: 25px;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    color: #6a1b9a; /* ม่วงเข้ม (Darker Purple) */
+    border-bottom: 2px solid #e1bee7;
+    padding-bottom: 5px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d1c4e9;
+}
+
+a {
+    color: #6a1b9a; /* ม่วงเข้ม */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Forms and Inputs --- */
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+/* จัดฟอร์ม "Add Router" ให้เป็นแนวนอน */
+form[action="/add"] {
+    display: flex;
+    gap: 10px; /* เพิ่มช่องว่างระหว่าง input */
+    align-items: center;
+}
+
+/* สไตล์ Input fields */
+input[name="ip"],
+input[name="user"],
+input[name="password"] {
+    flex-grow: 1; /* ทำให้ input ขยายเต็มพื้นที่ */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* --- Buttons --- */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+/* ปุ่ม "Home" และ "Add Router" */
+div > a button,
+form[action="/add"] button {
+    background-color: #c8e6c9; /* เขียวอ่อน (Light Green) */
+    color: #2e7d32; /* เขียวเข้ม (Darker Green) */
+}
+
+div > a button:hover,
+form[action="/add"] button:hover {
+    background-color: #a5d6a7; /* เขียวเข้มขึ้นเมื่อ hover */
+}
+
+/* --- Router List --- */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    
+    /* จัดการแสดงผลระหว่างข้อมูลและปุ่ม Delete */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* ให้ปุ่มตกบรรทัดได้ถ้าจอแคบ */
+    gap: 10px;
+}
+
+/* ปุ่ม "Delete" ใน List */
+li form[action="/delete"] {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+}
+
+li form[action="/delete"] button {
+    background-color: #ffcdd2; /* สีแดงอ่อน */
+    color: #c62828; /* สีแดงเข้ม */
+    padding: 5px 10px; /* ทำให้ปุ่มเล็กลง */
+    font-size: 0.9em;
+}
+
+li form[action="/delete"] button:hover {
+    background-color: #ef9a9a; /* สีแดงเข้มขึ้นเมื่อ hover */
+}
