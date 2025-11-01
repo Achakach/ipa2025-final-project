@@ -1,0 +1,168 @@
+/* --- 1. General Styles --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3e5f5; /* ม่วงอ่อน (Light Purple) */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto; /* จัดกลางเนื้อหา */
+}
+
+h1 {
+    color: #4a148c; /* ม่วงเข้ม */
+    margin-top: 0;
+    border-bottom: 2px solid #e1bee7;
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: #6a1b9a; /* ม่วงรอง */
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    color: #6a1b9a;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d1c4e9;
+    margin: 25px 0;
+}
+
+/* --- 2. Button Base Styles --- */
+/* ปุ่ม "Home" และ "Back to Router" (ปุ่มรอง) */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+    
+    /* สีเขียว (Default / Primary) */
+    background-color: #c8e6c9; /* เขียวอ่อน */
+    color: #2e7d32; /* เขียวเข้ม */
+}
+button:hover {
+    background-color: #a5d6a7;
+}
+
+/* ปุ่มเพิ่ม (เขียวอ่อน) */
+.btn-success {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+}
+.btn-success:hover {
+    background-color: #a5d6a7;
+}
+
+/* ปุ่มลบ (แดง) */
+.btn-danger {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+.btn-danger:hover {
+    background-color: #ef9a9a;
+}
+
+/* ปุ่ม Submit หลัก (เขียวสด) */
+.btn-primary-submit {
+    background-color: #2fce54;
+    color: white;
+    font-size: 1.1em;
+    padding: 12px 20px;
+    width: 100%; /* ทำให้ปุ่มกว้างเต็ม */
+}
+.btn-primary-submit:hover {
+    background-color: #28a745;
+}
+
+
+/* --- 3. Configuration Form --- */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+label {
+    display: block; /* ทำให้ label อยู่บรรทัดของตัวเอง */
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* สไตล์ input/select ทั่วไปในฟอร์ม */
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* ป้องกัน padding ทำให้ล้น */
+    margin-bottom: 15px;
+}
+/* ซ่อน <br> ที่ไม่จำเป็น */
+form br {
+    display: none;
+}
+
+/* --- 4. Dynamic Rules Section --- */
+#rules-container {
+    margin-bottom: 20px;
+}
+
+.rule-row {
+    background-color: #fbf8fe; /* ม่วงจางมากๆ */
+    border: 1px solid #e1bee7; /* ขอบสีม่วง */
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.rule-row strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #4a148c;
+    font-size: 1.1em;
+}
+.rule-row br { display: none; } /* ซ่อน <br> */
+
+/* จัดการ input/select ภายใน rule */
+.rule-row select,
+.rule-row input[type="text"] {
+    width: auto; /* ไม่ต้องกว้าง 100% */
+    flex-grow: 1; /* ให้ขยายตัวตามพื้นที่ */
+    margin-bottom: 0;
+    margin-right: 8px;
+}
+
+/* จัดการปุ่ม "Remove" */
+.rule-row button {
+    margin-left: auto; /* ดันไปทางขวาสุด */
+}
+
+/* จัดแถวของ Rule ให้สวยงามด้วย Flexbox */
+.rule-row-content {
+    display: flex;
+    flex-wrap: wrap; /* ถ้าจอแคบ ให้ปุ่มตกบรรทัด */
+    gap: 10px; /* เว้นระยะห่าง */
+    align-items: center;
+}
