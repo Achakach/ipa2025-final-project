@@ -27,8 +27,8 @@ jobs:
       - name: Create .env
         run: |
           {
-            echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}"
-            echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}"
+            echo "COUCHDB_USER=${{ secrets.COUCHDB_USER }}"
+            echo "COUCHDB_PASSWORD=${{ secrets.COUCHDB_PASSWORD }}"
             echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}"
             echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}"
           } > .env
