@@ -1,16 +1,17 @@
 <html>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/router_detail.css" />
     <body>
+    <div class="container">
         <div style="margin-bottom: 15px;">
             <a href="{{ url_for('main') }}"><button>Home</button></a>
             <form method="POST" action="{{ url_for('save_configuration', ip=router_ip) }}" style="display:inline; margin-left: 20px;" onsubmit="return confirm('Are you sure you want to save the current running-config to startup-config?');">
-                <button type="submit" style="background-color: #2fce54; color: white;">Save Configuration</button>
+                <button type="submit" class="btn-success">Save Configuration</button>
             </form>
         </div>
         <hr>
     <h1>Router: {{ router_ip }}</h1>
     <h2>Interface Status</h2>
-<table border="1">
+<table>
             <thead>
                 <tr>
                     <th>timestamp</th>
@@ -31,7 +32,7 @@
                         <td>{{ i.proto }}</td>
                         <td>
                             <a href="{{ url_for('config_interface', ip=router_ip, interface_name=i.interface.replace('/', '-')) }}">
-                                <button>Configure</button>
+                                <button class="btn-secondary">Configure</button>
                             </a>
                         </td>
                     </tr>
@@ -46,7 +47,7 @@
         <button>Configure ACL</button>
     </a>
     {% if acls %}
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>ACL Number</th>
@@ -74,7 +75,7 @@
                 <td>
                     <form method="POST" action="{{ url_for('delete_acl', ip=router_ip) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete ACL {{ acl.name }}? This will remove it from all interfaces.');">
                         <input type="hidden" name="acl_number" value="{{ acl.name }}">
-                        <button type="submit" style="background-color: #dc3545; color: white;">Delete</button>
+                        <button type="submit" class="btn-danger">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -95,7 +96,7 @@
             <li>{{ server }}
                 <form method="POST" action="{{ url_for('delete_dns_server', ip=router_ip) }}" style="display:inline; margin-left: 10px;" onsubmit="return confirm('Are you sure you want to delete DNS server \'{{ server }}\'?');">
                     <input type="hidden" name="dns_server" value="{{ server }}">
-                    <button type="submit" style="font-size: 0.8em; padding: 2px 5px; background-color: #dc3545; color: white;">Delete</button>
+                    <button type="submit" class="btn-danger btn-small">Delete</button>
                 </form>
             </li>
         {% endfor %}
@@ -121,7 +122,7 @@
 
     <h4>DHCP Pools</h4>
     {% if dhcp_pools %}
-    <table border="1">
+    <table >
         <thead>
             <tr>
                 <th>Pool Name</th>
@@ -180,7 +181,7 @@
             }, 10000); // 10000 milliseconds = 10 seconds
         });
     </script>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Backup Timestamp</th>
@@ -206,6 +207,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
         <script>
         // ใช้ URLSearchParams เพื่ออ่านค่าจาก URL
         const urlParams = new URLSearchParams(window.location.search);

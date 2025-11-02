@@ -1,9 +1,10 @@
 <html>
 <head>
     <title>Configure Interface</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/config_interface.css" />
 </head>
 <body>
+    <div class="container">
     <div style="margin-bottom: 15px;">
         <a href="{{ url_for('main') }}"><button>Home</button></a>
         <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
@@ -41,7 +42,7 @@
         <br>
         <button type="submit">Apply Configuration</button>
     </form>
-
+    </div>
     <script>
         function toggleManualConfig() {
             var manualConfigDiv = document.getElementById('manual_config');

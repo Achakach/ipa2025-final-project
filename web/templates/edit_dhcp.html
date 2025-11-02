@@ -2,9 +2,10 @@
 <html>
 <head>
     <title>Edit DHCP Pool</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/edit_dhcp.css" />
 </head>
 <body>
+    <div class="container">
     <div style="margin-bottom: 15px;">
         <a href="{{ url_for('main') }}"><button>Home</button></a>
         <a href="{{ url_for('router_detail', ip=router_ip) }}"><button>Back to Router</button></a>
@@ -16,7 +17,7 @@
 
     <form method="POST">
         <label for="pool_name">DHCP Pool Name:</label><br>
-        <input type="text" id="pool_name" name="pool_name" value="{{ pool.name }}" readonly style="background-color: #eee;"><br><br>
+        <input type="text" id="pool_name" name="pool_name" value="{{ pool.name }}" readonly><br><br>
 
         <label for="network_address">Network Address:</label><br>
         <input type="text" id="network_address" name="network_address" value="{{ pool.network_address }}" required><br><br>
@@ -39,8 +40,8 @@
 
         <p><i>Note: Excluded address ranges are not editable from this interface.</i></p>
 
-        <button type="submit">Apply Changes</button>
+        <button type="submit" class="btn-primary-submit">Apply Changes</button>
     </form>
-
+    </div>
 </body>
 </html>

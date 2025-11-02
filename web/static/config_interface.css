@@ -1,0 +1,141 @@
+/* --- 1. General Styles --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3e5f5; /* ม่วงอ่อน (Light Purple) */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px; /* หน้านี้ไม่ต้องกว้างมาก */
+    margin: 0 auto; /* จัดกลางเนื้อหา */
+}
+
+h1 {
+    color: #4a148c; /* ม่วงเข้ม */
+    margin-top: 0;
+    border-bottom: 2px solid #e1bee7;
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: #6a1b9a; /* ม่วงรอง */
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-top: -10px; /* ทำให้เป็นเหมือน sub-title */
+    margin-bottom: 25px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d1c4e9;
+    margin: 25px 0;
+}
+
+/* --- 2. Buttons --- */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+}
+
+/* ปุ่ม "Home" และ "Back to Router" (ปุ่มรอง) */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+    
+    /* สีเขียว (Default / Primary) */
+    background-color: #c8e6c9; /* เขียวอ่อน */
+    color: #2e7d32; /* เขียวเข้ม */
+}
+button:hover {
+    background-color: #a5d6a7;
+}
+
+/* --- 3. Configuration Form --- */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* จัดการตัวเลือก Radio */
+form > div {
+    margin-bottom: 15px;
+}
+
+input[type="radio"] {
+    /* ทำให้ปุ่ม radio ใหญ่ขึ้นเล็กน้อย */
+    transform: scale(1.2);
+    margin-right: 10px;
+    
+    /* เปลี่ยนสีวงกลมเป็นสีม่วง */
+    accent-color: #6a1b9a;
+}
+
+label {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #333;
+}
+
+/* กล่อง Manual Config ที่ซ่อนไว้ */
+#manual_config {
+    background-color: #fbf8fe; /* ม่วงจางมากๆ */
+    border: 1px solid #e1bee7;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px !important; /* ใช้ !important เพื่อ override inline-style */
+}
+
+/* สไตล์ input และ select ภายในกล่อง */
+#manual_config label {
+    font-size: 1em;
+    font-weight: normal;
+    color: #555;
+    display: block; /* ทำให้ label อยู่บรรทัดของตัวเอง */
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+select {
+    width: 100%; /* ทำให้ input/select กว้างเต็มกล่อง */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* ป้องกัน padding ทำให้ล้น */
+}
+
+/* ซ่อน <br> ที่ไม่จำเป็น และใช้ margin แทน */
+#manual_config br {
+    display: none;
+}
+#manual_config input[type="text"] {
+    margin-bottom: 15px; /* เว้นระยะห่างแทน <br> */
+}
+
+
+/* ปุ่ม "Apply Configuration" (ปุ่มหลัก) */
+form button[type="submit"] {
+    background-color: #c8e6c9; /* เขียวอ่อน */
+    color: #2e7d32; /* เขียวเข้ม */
+    font-size: 1.1em;
+    padding: 12px 20px;
+    margin-top: 10px;
+}
+form button[type="submit"]:hover {
+    background-color: #a5d6a7;
+}

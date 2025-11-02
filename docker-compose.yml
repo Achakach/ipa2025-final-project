@@ -13,7 +13,8 @@ services:
       COUCHDB_URI: "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@couchdb:5984/"
       ROUTER_DB_NAME: "my_routers_collection"
       INTERFACE_DB_NAME: "interface_status"
-
+    volumes:
+      - ./web:/home/myapp
   couchdb: # <--- เปลี่ยน service นี้ทั้งหมด
     image: couchdb:3
     ports:

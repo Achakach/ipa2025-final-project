@@ -1,0 +1,204 @@
+/* --- 1. General Styles (สำหรับทุกหน้า) --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3e5f5; /* ม่วงอ่อน (Light Purple) */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 950px;
+    margin: 0 auto; /* จัดกลางเนื้อหา */
+}
+
+h1, h2, h4 {
+    color: #4a148c; /* ม่วงเข้มขึ้น */
+}
+
+h1 { margin-top: 0; }
+h2 {
+    background-color: #e1bee7; /* ม่วงที่เข้มกว่าพื้นหลัง */
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d1c4e9;
+    margin: 25px 0;
+}
+
+a {
+    color: #6a1b9a;
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+p {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    color: #777;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* --- 2. Buttons (สำหรับทุกหน้า) --- */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+    
+    /* สีเขียว (Default / Primary) */
+    background-color: #c8e6c9; /* เขียวอ่อน */
+    color: #2e7d32; /* เขียวเข้ม */
+}
+button:hover {
+    background-color: #a5d6a7;
+}
+
+/* ปุ่มสีแดง (Danger / Delete) */
+button.btn-danger {
+    background-color: #ffcdd2; /* แดงอ่อน */
+    color: #c62828; /* แดงเข้ม */
+}
+button.btn-danger:hover {
+    background-color: #ef9a9a;
+}
+
+/* ปุ่มสีเขียวสด (Success / Save) */
+button.btn-success {
+    background-color: #2fce54;
+    color: white;
+}
+button.btn-success:hover {
+    background-color: #28a745;
+}
+
+/* ปุ่มสีเทา (Secondary / View / Download) */
+button.btn-secondary {
+    background-color: #e0e0e0;
+    color: #424242;
+}
+button.btn-secondary:hover {
+    background-color: #bdbdbd;
+}
+
+/* ปุ่มขนาดเล็ก */
+button.btn-small {
+    font-size: 0.8em;
+    padding: 2px 5px;
+}
+
+/* --- 3. Forms (สำหรับทุกหน้า) --- */
+form[action="/add"] { /* (จากหน้าแรก) */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+input[name="ip"],
+input[name="user"],
+input[name="password"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* ทำให้ form ที่อยู่ติดกัน (inline) ไม่มีพื้นหลัง */
+form[style*="display:inline"] {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+}
+
+/* --- 4. Lists (สำหรับหน้าแรก และหน้ารายละเอียด) --- */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* สไตล์ LI (หน้าแรก และ DNS List) */
+li {
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* (สไตล์จากหน้าแรก) */
+.router-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    align-items: center;
+    flex-grow: 1;
+}
+.router-info a { font-size: 1.1em; }
+.router-info span {
+    font-size: 0.95em;
+    color: #555;
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+}
+.router-info strong { color: #333; margin-right: 5px; }
+
+
+/* --- 5. Tables (ใหม่! สำหรับหน้ารายละเอียด) --- */
+table {
+    width: 100%;
+    border-collapse: collapse; /* ทำให้เส้นขอบสวยขึ้น */
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    overflow: hidden; /* จำเป็นสำหรับ border-radius */
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e1bee7; /* เส้นคั่นสีม่วงอ่อน */
+}
+
+table th {
+    background-color: #f3e5f5; /* พื้นหลังหัวตารางสีม่วงอ่อน */
+    color: #6a1b9a; /* ตัวอักษรหัวตารางสีม่วงเข้ม */
+    font-weight: 600;
+}
+
+table tbody tr:hover {
+    background-color: #faf5fb; /* สีม่วงจางๆ เวลา hover */
+}
+
+/* ไม่ต้องมีเส้นขอบที่แถวสุดท้าย */
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* จัดปุ่มในตารางให้มีระยะห่าง */
+table td a, table td form {
+    margin-right: 5px;
+}
