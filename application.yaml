@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/Achakach/ipa2025-msapp.git' # <-- Repo ของคุณ
     targetRevision: HEAD
-    path: web/manifests # <-- Path ตามคู่มือ Lab
+    path: k8s-manifests # <-- Path ตามคู่มือ Lab
   destination:
     server: https://kubernetes.default.svc
     namespace: ipa2025
