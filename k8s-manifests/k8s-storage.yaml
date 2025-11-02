@@ -1,28 +1,28 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: couchdb-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/mnt/data/couchdb" # <--- K8s จะเก็บข้อมูลไว้ใน worker node ที่ path นี้
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: couchdb-pv
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   hostPath:
+#     path: "/mnt/data/couchdb" # <--- K8s จะเก็บข้อมูลไว้ใน worker node ที่ path นี้
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: rabbitmq-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/mnt/data/rabbitmq" # <--- K8s จะเก็บข้อมูลไว้ใน worker node ที่ path นี้
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: rabbitmq-pv
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   hostPath:
+#     path: "/mnt/data/rabbitmq" # <--- K8s จะเก็บข้อมูลไว้ใน worker node ที่ path นี้
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
