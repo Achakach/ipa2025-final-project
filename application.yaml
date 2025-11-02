@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # ตั้งชื่อ Application นี้ (เช่น ชื่อโปรเจกต์)
+  name: ipa2025-project
+  # ไฟล์นี้ต้องถูกสร้างใน namespace 'argocd' เพื่อให้ ArgoCD อ่าน
+  namespace: argocd
+spec:
+  # ใช้ project 'default' ของ ArgoCD
+  project: default
+  
+  source:
+    # URL ของ Git Repo คุณ (จากไฟล์เดิมของคุณ)
+    repoURL: 'https://github.com/Achakach/ipa2025-msapp.git'
+    targetRevision: HEAD
+    
+    # !!! นี่คือจุดที่แก้ไข !!!
+    # ชี้ไปที่โฟลเดอร์ใหม่ที่เราสร้าง
+    path: k8s-manifests
+  
+  destination:
+    # Cluster ปลายทาง (ใช้ default)
+    server: https://kubernetes.default.svc
+    # Namespace ปลายทางที่เราจะติดตั้งแอปทั้งหมด
+    namespace: ipa2025
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # เพิ่มบรรทัดนี้ เพื่ออนุญาตให้ ArgoCD สร้าง namespace 'ipa2025' ให้เรา
+      - CreateNamespace=true
