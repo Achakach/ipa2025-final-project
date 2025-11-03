@@ -28,7 +28,7 @@ metadata:
   name: worker
   namespace: ipa2025
 spec:
-  replicas: 2 # <--- Worker เราเพิ่มหลายตัวเพื่อช่วยกันทำงานได้
+  replicas: 4 # <--- Worker เราเพิ่มหลายตัวเพื่อช่วยกันทำงานได้
   selector:
     matchLabels:
       app: worker
