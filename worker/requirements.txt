@@ -8,3 +8,4 @@ paramiko
 textfsm
 ntc-templates
 # ansible-pylibssh
+scp

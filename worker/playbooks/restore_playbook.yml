@@ -8,22 +8,40 @@
     ansible_user: "{{ router_user }}"
     ansible_password: "{{ router_pass }}"
     ansible_connection: ansible.netcommon.network_cli
+    # กำหนดชื่อไฟล์บนเราเตอร์
+    remote_temp_filename: "ansible_restore_temp.cfg"
 
   tasks:
-    - name: Create a temporary file with the config content
+    - name: Create a temporary file with the config content (on worker)
       ansible.builtin.copy:
         content: "{{ config_content }}"
         dest: "/tmp/restore_config_{{ inventory_hostname }}.tmp"
-      register: temp_file
+      register: local_temp_file
 
-    - name: Restore configuration from the temporary file
-      cisco.ios.ios_config:
-        # ใช้ src เพื่ออ่านจากไฟล์
-        src: "{{ temp_file.dest }}"
-        state: replaced # <--- เพิ่มบรรทัดนี้ เพื่อสั่งให้แทนที่ Configuration ทั้งหมด
+    - name: Upload config file to router's flash
+      # ใช้ net_put เพื่อโอนไฟล์จาก worker -> router
+      # Task นี้จะทำงานได้หลังจากคุณเปิด 'ip scp server enable' บนเราเตอร์
+      ansible.netcommon.net_put:
+        src: "{{ local_temp_file.dest }}"
+        dest: "flash:/{{ remote_temp_filename }}"
+      register: upload_result
+
+    - name: Restore configuration using 'configure replace'
+      # ใช้ ios_command เพื่อรันคำสั่งบนเราเตอร์
+      cisco.ios.ios_command:
+        commands:
+          # นี่คือคำสั่ง "Replace" ที่แท้จริง
+          - "configure replace flash:/{{ remote_temp_filename }} force"
       register: restore_result
 
-    - name: Clean up the temporary file
+    - name: Clean up config file from router's flash
+      cisco.ios.ios_command:
+        commands:
+          # ลบไฟล์ชั่วคราวออกจาก flash
+          - "delete /force flash:/{{ remote_temp_filename }}"
+      register: cleanup_remote_result
+
+    - name: Clean up the temporary file (from worker)
       ansible.builtin.file:
-        path: "{{ temp_file.dest }}"
+        path: "{{ local_temp_file.dest }}"
         state: absent
