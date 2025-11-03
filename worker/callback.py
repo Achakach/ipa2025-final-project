@@ -105,13 +105,13 @@ def callback(ch, method, props, body):
                 f"Successfully sent delete job for DHCP pool {pool_name} on {router_ip}"
             )
             needs_refresh = True  # <--- ตั้งค่า Flag
-            
+
         elif job_type == "save_config":
             save_config(router_ip, router_username, router_password)
             print(f"Successfully sent save configuration job for {router_ip}")
             # การ Save ไม่เปลี่ยน running-config แต่ถ้าอยากให้ Refresh ด้วยก็เปิดบรรทัดล่าง
             # needs_refresh = True
-            
+
         elif job_type == "configure_acl":
             configure_acl(
                 router_ip,
@@ -124,7 +124,7 @@ def callback(ch, method, props, body):
             )
             print(f"Successfully sent ACL config job for {router_ip}")
             needs_refresh = True  # <--- ตั้งค่า Flag
-            
+
         elif job_type == "delete_acl":
             acl_number = job.get("acl_number")
             if acl_number:
